@@ -68,7 +68,7 @@ summary_data <- filtered_data %>%
     mean = mean(Nseeds, na.rm = TRUE),
     se = sd(Nseeds, na.rm = TRUE) / sqrt(n())
   )
-  #The standard error measures the precision of the sample mean as an estimate of the population mean.
+#The standard error measures the precision of the sample mean as an estimate of the population mean.
   #Without dividing by the sqrt the result would simply be the standard deviation, 
   #which measures the spread of individual data points, not the precision of the group mean.
 
@@ -86,5 +86,4 @@ ggplot(summary_data, aes(x = Treatment, y = mean, fill = Treatment)) +
        y = "Mean Number of Seeds") +
   theme_minimal() +
   scale_fill_brewer(palette = "Set3")
-
 
