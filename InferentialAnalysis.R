@@ -85,5 +85,5 @@ ggplot(summary_data, aes(x = Treatment, y = mean, fill = Treatment)) +
        x = "Treatment",
        y = "Mean Number of Seeds") +
   theme_minimal() +
-  scale_fill_brewer(palette = "Set3")
+  scale_fill_brewer(palette = "Set3") 
 
