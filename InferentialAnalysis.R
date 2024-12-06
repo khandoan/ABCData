@@ -51,8 +51,12 @@ ggplot(data_filtered_nseeds, aes(sample = Nseeds)) +
   facet_wrap(~ Treatment) +
   theme_minimal() +
   labs(title = "QQ Plot by Treatment")
+<<<<<<< HEAD
 #This plots show whether this analysis follows Normality.
 #The graphs show non-normal distribution
+=======
+
+>>>>>>> 4dc7d52160a5b59e0618ad93601f82d2dc75567a
 
 #---Agricolae Test (Tukey HSD)--------
 tukey_result <- HSD.test(anova_result, "Treatment", group = TRUE)
@@ -68,10 +72,13 @@ summary_data <- filtered_data %>%
     mean = mean(Nseeds, na.rm = TRUE),
     se = sd(Nseeds, na.rm = TRUE) / sqrt(n())
   )
+<<<<<<< HEAD
 #The standard error measures the precision of the sample mean as an estimate of the population mean.
   #Without dividing by the sqrt the result would simply be the standard deviation, 
   #which measures the spread of individual data points, not the precision of the group mean.
 
+=======
+>>>>>>> 4dc7d52160a5b59e0618ad93601f82d2dc75567a
 
 # Merge Tukey groups with summary data
 summary_data <- left_join(summary_data, tukey_groups, by = "Treatment")
@@ -87,3 +94,7 @@ ggplot(summary_data, aes(x = Treatment, y = mean, fill = Treatment)) +
   theme_minimal() +
   scale_fill_brewer(palette = "Set3")
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4dc7d52160a5b59e0618ad93601f82d2dc75567a
