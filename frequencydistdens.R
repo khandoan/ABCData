@@ -1,5 +1,6 @@
+
 # Load necessary library
-install.packages("dplyr")
+#install.packages("dplyr")
 library(ggplot2)
 library(dplyr)
 
@@ -100,60 +101,46 @@ cat("\nChi-squared Statistic (X^2):", x2_value, "\n")
 cat("P-value:", p_value, "\n")
 
 #Figure 5 Plot
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
 # Step 1: Exclude NA values in key columns
 data <- data %>%
   filter(!is.na(Nseeds), !is.na(FrDiam), !is.na(Treatment))  # Remove rows with NA values
-
-# Debug: Check the dataset after filtering
-print("Dataset after filtering:")
-print(head(data))
-print("Number of rows remaining:")
-print(nrow(data))
 
 # Step 2: Categorize Seed Presence
 data <- data %>%
   mutate(SeedPresence = ifelse(Nseeds > 0, "TRUE", "FALSE"))  # Categorize as Seeded or Seedless
 
-# Debug: Check unique Treatment and SeedPresence values
-print("Unique Treatment values:")
-print(unique(data$Treatment))
-print("Unique SeedPresence values:")
-print(unique(data$SeedPresence))
+# Step 3: Check and force Treatment levels
+data$Treatment <- factor(data$Treatment, 
+                         levels = c("B", "C", "D", "E", "A"))  # Order: C-, CuGA, ZnRep, CapRep, C+
 
-# Step 3: Convert Treatment to Factor with Custom Labels
-data <- data %>%
-  mutate(Treatment = factor(Treatment,
-                            levels = c("A", "B", "C", "D", "E"),
-                            labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+")))
-
-# Debug: Check unique values after relabeling
-print("Unique Treatment values after relabeling:")
-print(unique(data$Treatment))
+# Debugging Step: Print treatment levels
+print("Treatment levels after ordering:")
+print(levels(data$Treatment))
 
 # Step 4: Calculate Percentages by Treatment and SeedPresence
 percent_data <- data %>%
   group_by(Treatment, SeedPresence) %>%
   summarise(Count = n(), .groups = "drop") %>%
-  group_by(Treatment) %>%  # Ensure percentages are calculated within each treatment
+  group_by(Treatment) %>%
   mutate(Percent = (Count / sum(Count)) * 100)
 
-# Debug: Check summarized data
-print("Summarized data for plot:")
+# Debugging Step: Print percent_data
+print("Summarized percentage data:")
 print(percent_data)
 
-# Step 5: Create the Plot with Labels
-if (nrow(percent_data) > 0) {
-  ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
-    geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(label = sprintf("%.1f%%", Percent)),  # Add percentage labels
-              position = position_stack(vjust = 0.5),  # Center labels in the stack
-              color = "white", size = 4) +             # Adjust text color and size
-    labs(title = "Percentage of Seed Presence by Treatment",
-         x = "Treatment",
-         y = "Percentage",
-         fill = "Seed Presence") +
-    theme_minimal()
-} else {
-  print("No data available for plotting.")
-}
+# Step 5: Force the graph to output
+ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = sprintf("%.1f%%", Percent)),
+            position = position_stack(vjust = 0.5), color = "white", size = 4) +
+  labs(title = "Percentage of Seed Presence by Treatment",
+       x = "Treatment",
+       y = "Percentage",
+       fill = "Seed Presence") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+"))  # Correct display labels
 
