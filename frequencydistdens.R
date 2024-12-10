@@ -5,7 +5,7 @@ library(ggplot2)
 library(dplyr)
 
 # Load the dataset
-data <- data.frame(frutasysemillas)
+data <- read.csv("DATA/frutasysemillas.csv")
 
 # Frequency Distribution for Number of Seeds (Nseeds)
 ggplot(data, aes(x = Nseeds)) +
