@@ -1,16 +1,33 @@
+---
+title: "Inferential Statistics"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
 #install.packages("dplyr")
 #install.packages("knitr")
 #install.packages("ggplot2")
 #install.packages("agricolae")
+
+
 library(dplyr)
 library(knitr)
 library(ggplot2)
 library(agricolae)
 
+#Folder for results
+knitr::opts_chunk$set(fig.path = 'results/')
+```
 
+## ANOVA
 
-#----ANOVA----------------
-data <- data.frame(frutasysemillas)
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+#| label: ANOVA
+# dir("DATA")
+data <- read.csv("DATA/frutasysemillas.csv")
 
 # Remove rows with missing Nseeds
 data_clean <- na.omit(data[, c("Treatment", "Block", "Nseeds")])
@@ -20,7 +37,17 @@ anova_result <- aov(Nseeds ~ Treatment + Block, data = data_clean)
 summary(anova_result)
 
 
-#---SHAPIRO TEST--------------
+tukey_result <- TukeyHSD(anova_result)
+tukey_result
+
+agricolae_result <- HSD.test(anova_result, "Treatment", group = TRUE)
+print(agricolae_result$groups)
+```
+
+## Shapiro Test
+
+```{r}
+#| label: Shapiro test
 group_counts_nseeds <- data_clean %>%
   group_by(Treatment) %>%
   summarise(unique_count = n_distinct(Nseeds))
@@ -54,7 +81,12 @@ ggplot(data_filtered_nseeds, aes(sample = Nseeds)) +
 #This plots show whether this analysis follows Normality.
 #The graphs show non-normal distribution
 
-#---Agricolae Test (Tukey HSD)--------
+```
+
+## Kruskal-Wallis Test
+
+```{r}
+#| label: Kruskal-Wallis
 tukey_result <- HSD.test(anova_result, "Treatment", group = TRUE)
 tukey_groups <- data.frame(
   Treatment = rownames(tukey_result$groups),
@@ -62,7 +94,7 @@ tukey_groups <- data.frame(
 )
 
 # Calculate means and standard errors for each treatment
-summary_data <- filtered_data %>%
+summary_data <- data %>%
   group_by(Treatment) %>%
   summarise(
     mean = mean(Nseeds, na.rm = TRUE),
@@ -76,6 +108,26 @@ summary_data <- filtered_data %>%
 # Merge Tukey groups with summary data
 summary_data <- left_join(summary_data, tukey_groups, by = "Treatment")
 
+
+summary_data$Treatment <- factor(summary_data$Treatment, levels = c("B", "C", "D", "E", "A"))
+
+# Define custom colors for the bars
+custom_colors <- c(
+  "B" = "#1f77b4",  # Blue
+  "C" = "#ff7f0e",  # Orange
+  "D" = "#2ca02c",  # Green
+  "E" = "#d62728",  # Red
+  "A" = "#9467bd"   # Purple
+)
+
+# Define custom labels for the x-axis
+x_axis_labels <- c(
+  "(-) Control (B)",
+  "CuGA (C)",
+  "ZnRep (D)",
+  "CapRep (E)",
+  "+ Control (A)"
+)
 # Create the bar plot with error bars and Tukey groups
 ggplot(summary_data, aes(x = Treatment, y = mean, fill = Treatment)) +
   geom_bar(stat = "identity", color = "black", width = 0.7) +
@@ -83,7 +135,13 @@ ggplot(summary_data, aes(x = Treatment, y = mean, fill = Treatment)) +
   geom_text(aes(label = Group, y = mean + se + 0.1), vjust = 0) +
   labs(title = "Mean Number of Seeds by Treatment",
        x = "Treatment",
-       y = "Mean Number of Seeds") +
+       y = "Mean Number of Seeds",
+       fill = "Treatments") +
   theme_minimal() +
-  scale_fill_brewer(palette = "Set3") 
+  scale_fill_manual(values = custom_colors) +  # Apply custom bar colors
+  scale_x_discrete(labels = x_axis_labels) +  # Use custom x-axis labels
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5),  # Rotate x-axis labels
+        legend.position = "right")
 
+
+```
