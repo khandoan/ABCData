@@ -1,0 +1,259 @@
+---
+title: "Analysis of Seed and Fruit Data"
+author: "Ana Belem Garcia, Arfa Burghias, Cann Doan, Fatima Tahir"
+date: "2024-06-16"
+format: html
+editor: visual
+---
+
+## Introduction
+
+This report analyzes the relationship between seed count, fruit diameter, and treatment effects on fruit development. We generate visualizations, statistical tests, and interpret results to understand seed distribution, fruit characteristics, and treatment effects.
+
+## Load Required Libraries and Data
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+
+# Load the dataset
+data <- read.csv("DATA/frutasysemillas.csv")
+```
+
+## Explanation
+
+```         
+•   Load ggplot2 for data visualization and dplyr for data manipulation.
+
+•   Load the dataset named frutasysemillas.
+```
+
+## 1. Frequency Distribution of Number of Seeds
+
+```{r}
+ggplot(data, aes(x = Nseeds)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  labs(title = "Frequency Distribution of Number of Seeds",
+       x = "Number of Seeds",
+       y = "Frequency") +
+  theme_minimal()
+```
+
+## Explanation
+
+```         
+•   A histogram shows the frequency distribution of number of seeds per fruit.
+
+•   binwidth = 5 groups the seeds into intervals of 5.
+```
+
+## 2. Density Curve of Number of Seeds
+
+```{r}
+ggplot(data, aes(x = Nseeds)) +
+  geom_density(fill = "lightblue", alpha = 0.7) +
+  labs(title = "Density Curve of Number of Seeds",
+       x = "Number of Seeds",
+       y = "Density") +
+  theme_minimal()
+```
+
+## Explanation
+
+```         
+•   A density curve shows the probability distribution of the number of seeds.
+```
+
+## 3. Frequency Distribution of Fruit Diameter
+
+```{r}
+ggplot(data, aes(x = FrDiam)) +
+  geom_histogram(binwidth = 2, fill = "green", color = "black") +
+  labs(title = "Frequency Distribution of Fruit Diameter",
+       x = "Fruit Diameter (mm)",
+       y = "Frequency") +
+  theme_minimal()
+```
+
+## Explanation
+
+```         
+•   A histogram shows the frequency distribution of fruit diameter in mm.
+
+•   Binwidth is set to 2 for clarity.
+```
+
+## 4. Density Curve of Fruit Diameter
+
+```{r}
+ggplot(data, aes(x = FrDiam)) +
+  geom_density(fill = "lightgreen", alpha = 0.7) +
+  labs(title = "Density Curve of Fruit Diameter",
+       x = "Fruit Diameter (mm)",
+       y = "Density") +
+  theme_minimal()
+```
+
+## Explanation
+
+```         
+•   A density curve shows the probability distribution of fruit diameter.
+```
+
+## 5. Number of Seeds by Treatment
+
+```{r}
+ggplot(data, aes(x = Nseeds, fill = Treatment)) +
+  geom_histogram(binwidth = 5, color = "black", alpha = 0.7) +
+  facet_wrap(~Treatment) +
+  labs(title = "Frequency Distribution of Number of Seeds by Treatment",
+       x = "Number of Seeds",
+       y = "Frequency") +
+  theme_minimal()
+```
+
+## Explanation
+
+```         
+•   This histogram displays the number of seeds by **treatment** using **facets** to separate treatments.
+```
+
+## 6. Density Curve of Seeds by Treatment
+
+```{r}
+ggplot(data, aes(x = Nseeds, color = Treatment, fill = Treatment)) +
+  geom_density(alpha = 0.4) +
+  facet_wrap(~Treatment) +
+  labs(title = "Density Curve of Number of Seeds by Treatment",
+       x = "Number of Seeds",
+       y = "Density") +
+  theme_minimal()
+```
+
+## Explanation
+
+```         
+•   Density plots show the seed distribution across treatments, with transparency for overlapping curves.
+```
+
+## 7. Chi-Squared Test: Seeded vs Seedless by Treatment
+
+```{r}
+# Categorize fruits as Seeded or Seedless
+data <- data %>%
+  mutate(Seeded = ifelse(Nseeds > 0, "Seeded", "Seedless"))
+
+# Create a contingency table
+contingency_table <- table(data$Seeded, data$Treatment)
+
+# Calculate percentages
+percentage_table <- prop.table(contingency_table, margin = 2) * 100
+
+# Perform Chi-squared Test
+chi_squared_result <- chisq.test(contingency_table)
+
+# Print results
+cat("Contingency Table:\n")
+print(contingency_table)
+cat("\nPercentage Table:\n")
+print(round(percentage_table, 2))
+cat("\nChi-squared Statistic (X^2):", chi_squared_result$statistic, "\n")
+cat("P-value:", chi_squared_result$p.value, "\n")
+```
+
+## Explanation
+
+```         
+1.  Fruits are categorized as **Seeded** (Nseeds \> 0) or **Seedless**.
+
+2.  A contingency table and percentages are generated for **Seeded vs. Seedless** across treatments.
+
+3.  The **Chi-squared test** checks for significant associations between seed presence and treatment.
+```
+
+## 8. Percentage of Seed Presence by Treatment
+
+```{r}
+#chi-squared test to compare seeded versus seedless fruit 
+# Step 1: Create a new column for Seeded and Seedless categorization
+data <- data %>%
+  mutate(Seeded = ifelse(Nseeds > 0, "Seeded", "Seedless"))  # Categorize fruits
+
+# Step 2: Create a contingency table for Seeded vs Seedless fruits by Treatment
+contingency_table <- table(data$Seeded, data$Treatment)
+
+# Step 3: Calculate percentages
+percentage_table <- prop.table(contingency_table, margin = 2) * 100  # Percentage by Treatment
+
+# Step 4: Run the Chi-Squared Test
+chi_squared_result <- chisq.test(contingency_table)
+
+# Step 5: Extract Chi-squared statistic and p-value
+x2_value <- chi_squared_result$statistic
+p_value <- chi_squared_result$p.value
+
+# Step 6: Print results
+cat("Contingency Table:\n")
+print(contingency_table)
+cat("\nPercentage Table (Seeded vs Seedless by Treatment):\n")
+print(round(percentage_table, 2))  # Rounded for clarity
+cat("\nChi-squared Statistic (X^2):", x2_value, "\n")
+cat("P-value:", p_value, "\n")
+
+#Figure 5 Plot
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
+# Step 1: Exclude NA values in key columns
+data <- data %>%
+  filter(!is.na(Nseeds), !is.na(FrDiam), !is.na(Treatment))  # Remove rows with NA values
+
+# Step 2: Categorize Seed Presence
+data <- data %>%
+  mutate(SeedPresence = ifelse(Nseeds > 0, "TRUE", "FALSE"))  # Categorize as Seeded or Seedless
+
+# Step 3: Check and force Treatment levels
+data$Treatment <- factor(data$Treatment, 
+                         levels = c("B", "C", "D", "E", "A"))  # Order: C-, CuGA, ZnRep, CapRep, C+
+
+# Debugging Step: Print treatment levels
+print("Treatment levels after ordering:")
+print(levels(data$Treatment))
+
+# Step 4: Calculate Percentages by Treatment and SeedPresence
+percent_data <- data %>%
+  group_by(Treatment, SeedPresence) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  group_by(Treatment) %>%
+  mutate(Percent = (Count / sum(Count)) * 100)
+
+# Debugging Step: Print percent_data
+print("Summarized percentage data:")
+print(percent_data)
+
+# Step 5: Force the graph to output
+ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = sprintf("%.1f%%", Percent)),
+            position = position_stack(vjust = 0.5), color = "white", size = 4) +
+  labs(title = "Percentage of Seed Presence by Treatment",
+       x = "Treatment",
+       y = "Percentage",
+       fill = "Seed Presence") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+"))  # Correct display labels
+```
+
+## Explanation
+
+```         
+•   Percentages of **Seeded** and **Seedless** fruits are calculated for each treatment.
+
+•   A **stacked bar chart** visualizes these percentages, with labels added for clarity.
+```
+
+## Conclusion
+
+This analysis examined seed count, fruit diameter, and treatment effects on fruit development. The Chi-squared test evaluated the relationship between treatments and seed presence, and visualizations provided deeper insights into distributions.

@@ -1,0 +1,68 @@
+---
+title: "Less Than Two Seeds"
+author: "Ana Belem García, Arfa Ghias, Cann Doan, Fatima Tahir"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
+#install.packages("dplyr")
+#install.packages("knitr")
+#install.packages("ggplot2")
+#install.packages("agricolae")
+
+
+library(dplyr)
+library(knitr)
+library(ggplot2)
+library(agricolae)
+
+#Folder for results
+knitr::opts_chunk$set(fig.path = 'results/')
+```
+
+## Analysis with less than two seeds fruits
+
+In the fruit industry, seedless fruits or fruits with very few seeds are highly sought after for their consumer appeal, as they offer greater convenience and are often preferred in various culinary applications. While the ideal is to produce entirely seedless fruits, those with a minimal seed count are still considered desirable. Therefore, we decided to reanalyze our data with a new focus: treating fruits with **2 or fewer seeds** as **seedless**. This approach allows for a more refined understanding of the treatments that effectively minimize seed production, which is crucial for enhancing the marketability of fruit products.
+
+```{r}
+# Load data
+#| label: TwoSeedsPercen
+data <- read.csv("DATA/frutasysemillas.csv")
+data <- na.omit(data)
+data <- data %>%
+  mutate(SeedPresence = ifelse(Nseeds > 2, "TRUE", "FALSE"))  # Categorize as Seeded or Seedless
+
+# Step 3: Check and force Treatment levels
+data$Treatment <- factor(data$Treatment, 
+                         levels = c("B", "C", "D", "E", "A"))  # Order: C-, CuGA, ZnRep, CapRep, C+
+
+# Debugging Step: Print treatment levels
+#print("Treatment levels after ordering:")
+#print(levels(data$Treatment))
+
+# Step 4: Calculate Percentages by Treatment and SeedPresence
+percent_data <- data %>%
+  group_by(Treatment, SeedPresence) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  group_by(Treatment) %>%
+  mutate(Percent = (Count / sum(Count)) * 100)
+
+# Debugging Step: Print percent_data
+#print("Summarized percentage data:")
+#print(percent_data)
+
+# Step 5: Force the graph to output
+ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = sprintf("%.1f%%", Percent)),
+            position = position_stack(vjust = 0.5), color = "white", size = 4) +
+  labs(title = "Percentage of Seed Presence by Treatment",
+       x = "Treatment",
+       y = "Percentage",
+       fill = "Seed Presence") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+"))  # Correct display labels
+
+
+```

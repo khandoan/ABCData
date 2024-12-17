@@ -1,5 +1,6 @@
 ---
-title: "Inferential Statistics"
+title: "Inferential statistics"
+author: "Ana Belem García, Arfa Ghias, Cann Doan, Fatima Tahir"
 format: html
 editor: visual
 ---
@@ -22,29 +23,96 @@ knitr::opts_chunk$set(fig.path = 'results/')
 
 ## ANOVA
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+ANOVAs were used to compare the mean values between treatments and blocks.
 
 ```{r}
 #| label: ANOVA
 # dir("DATA")
-data <- read.csv("DATA/frutasysemillas.csv")
+data.seeds <- read.csv("DATA/frutasysemillas.csv")
 
 # Remove rows with missing Nseeds
-data_clean <- na.omit(data[, c("Treatment", "Block", "Nseeds")])
+data_clean <- na.omit(data.seeds[, c("Treatment", "Block", "Nseeds")])
 
 # Perform ANOVA
 anova_result <- aov(Nseeds ~ Treatment + Block, data = data_clean)
 summary(anova_result)
 
 
+
+```
+
+Given the past results we can tell the following things regarding:
+
+1.  **Treatment**:
+
+    -   The effect of the treatments (CuGA, ZnRep, CapRep) on the response variable (**Nseeds**) is **significant**.
+
+    -   The very small p-value (**2.91e-12**) tells us that **at least one treatment group is different** from the others.
+
+2.  **Block**:
+
+    -   The "Block" factor (replicates) also has a **significant effect** on the number of seeds. This means the blocking variable explains some of the variation in your data.
+
+3.  **Residuals**:
+
+    -   Residuals represent the **unexplained variability** after accounting for treatments and blocks.
+
+#### **Conclusion**:
+
+-   Both the **treatment** and the **block** factors influence the response variable (**Nseeds**).
+
+-   Since the treatment effect is significant, we performed a **post-hoc test** ( Tukey's test) to find out **which treatment groups differ** from each other.
+
+## Tukey test
+
+The **Tukey's post-hoc test** results helps to identify which **pairs of groups** (treatments and blocks) are significantly different after running the ANOVA.
+
+```{r}
 tukey_result <- TukeyHSD(anova_result)
 tukey_result
+```
 
+### **Interpretation of Treatments**:
+
+-   **Significant Differences** (p \< 0.05):
+
+    -   **B-A**: Group B has a significantly lower mean than Group A.
+
+    -   **C-B, D-B, E-B**: Groups C, D, and E have significantly higher means than Group B.
+
+    -   **D-C and E-C**: Groups D and E have significantly higher means than Group C.
+
+-   **Non-Significant Differences**:
+
+    -   **C-A, D-A, E-A, and E-D**: These groups do not show significant differences.
+
+### HSD test
+
+The HSD test is needed to **clearly group** the treatments based on performance and identify which are significantly different.
+
+```{r}
 agricolae_result <- HSD.test(anova_result, "Treatment", group = TRUE)
 print(agricolae_result$groups)
 ```
 
+-   **Negative Control (B):**
+
+    -   The mean for B is **0 (lowest group)** and is significantly different from all other treatments.
+
+    -   This confirms that **no intervention (B)** results in **no seed production**, as expected.
+
+```{=html}
+<!-- -->
+```
+-   **Positive Control (A):**
+
+    -   The mean for A is **0.986** and belongs to group **"ab"**, indicating it performs **significantly better than the negative control (B)**.
+
+    -   However, it is **not significantly better than treatments E and D**, meaning these two treatments perform as well as (or slightly better than) the positive control.
+
 ## Shapiro Test
+
+The Shapiro-Wilk test is a formal statistical test for normality. The null hypothesis (**H0**) is that the data is **normally distributed**.
 
 ```{r}
 #| label: Shapiro test
@@ -83,7 +151,23 @@ ggplot(data_filtered_nseeds, aes(sample = Nseeds)) +
 
 ```
 
+A **p-value \< 0.05** means we reject the null hypothesis and conclude the data is **not normally distributed**.
+
+In this case the results let us interpret that:
+
+-   **A**: p = 3.03e-14 → **Reject H₀** (not normal)
+
+-   **C**: p = 1.27e-23 → **Reject H₀** (not normal)
+
+-   **D**: p = 3.88e-15 → **Reject H₀** (not normal)
+
+-   **E**: p = 1.75e-15 → **Reject H₀** (not normal)
+
+Since the normality assumption is violated, we needed to use **non-parametric** alternatives like the **Kruskal-Wallis test** instead of ANOVA. The Kruskal-Wallis test does not assume normality.
+
 ## Kruskal-Wallis Test
+
+**Due to lack of normality**, nonparametric methods were selected to compare the means among treatments and blocks by a Kruskal-Wallis rank sum test. 
 
 ```{r}
 #| label: Kruskal-Wallis
@@ -94,7 +178,7 @@ tukey_groups <- data.frame(
 )
 
 # Calculate means and standard errors for each treatment
-summary_data <- data %>%
+summary_data <- data.seeds %>%
   group_by(Treatment) %>%
   summarise(
     mean = mean(Nseeds, na.rm = TRUE),
@@ -145,3 +229,13 @@ ggplot(summary_data, aes(x = Treatment, y = mean, fill = Treatment)) +
 
 
 ```
+
+According to the given graph:
+
+-   **The best option is the negative control (B)**, as it produced the **fewest seeds**.
+
+-   **CuGA (C)** could also be useful, as it significantly reduced seed count, although it’s not as effective as the **negative control**.
+
+-   **ZnRep (D)** and **CapRep (E)** are the least desirable treatments since they resulted in the **highest seed production**.
+
+Thus, you should prioritize treatments that either have **no seeds (B)** or minimize seed count, such as **CuGA (C)**, to achieve fruits with the fewest seeds.
