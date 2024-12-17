@@ -18,7 +18,7 @@ library(ggplot2)
 library(dplyr)
 
 # Load the dataset
-data <- data.frame(frutasysemillas)
+data <- read.csv("DATA/frutasysemillas.csv")
 ```
 
 ## Explanation
@@ -175,14 +175,65 @@ cat("P-value:", chi_squared_result$p.value, "\n")
 ## 8. Percentage of Seed Presence by Treatment
 
 ```{r}
-# Calculate percentages
+#chi-squared test to compare seeded versus seedless fruit 
+# Step 1: Create a new column for Seeded and Seedless categorization
+data <- data %>%
+  mutate(Seeded = ifelse(Nseeds > 0, "Seeded", "Seedless"))  # Categorize fruits
+
+# Step 2: Create a contingency table for Seeded vs Seedless fruits by Treatment
+contingency_table <- table(data$Seeded, data$Treatment)
+
+# Step 3: Calculate percentages
+percentage_table <- prop.table(contingency_table, margin = 2) * 100  # Percentage by Treatment
+
+# Step 4: Run the Chi-Squared Test
+chi_squared_result <- chisq.test(contingency_table)
+
+# Step 5: Extract Chi-squared statistic and p-value
+x2_value <- chi_squared_result$statistic
+p_value <- chi_squared_result$p.value
+
+# Step 6: Print results
+cat("Contingency Table:\n")
+print(contingency_table)
+cat("\nPercentage Table (Seeded vs Seedless by Treatment):\n")
+print(round(percentage_table, 2))  # Rounded for clarity
+cat("\nChi-squared Statistic (X^2):", x2_value, "\n")
+cat("P-value:", p_value, "\n")
+
+#Figure 5 Plot
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
+# Step 1: Exclude NA values in key columns
+data <- data %>%
+  filter(!is.na(Nseeds), !is.na(FrDiam), !is.na(Treatment))  # Remove rows with NA values
+
+# Step 2: Categorize Seed Presence
+data <- data %>%
+  mutate(SeedPresence = ifelse(Nseeds > 0, "TRUE", "FALSE"))  # Categorize as Seeded or Seedless
+
+# Step 3: Check and force Treatment levels
+data$Treatment <- factor(data$Treatment, 
+                         levels = c("B", "C", "D", "E", "A"))  # Order: C-, CuGA, ZnRep, CapRep, C+
+
+# Debugging Step: Print treatment levels
+print("Treatment levels after ordering:")
+print(levels(data$Treatment))
+
+# Step 4: Calculate Percentages by Treatment and SeedPresence
 percent_data <- data %>%
   group_by(Treatment, SeedPresence) %>%
   summarise(Count = n(), .groups = "drop") %>%
   group_by(Treatment) %>%
   mutate(Percent = (Count / sum(Count)) * 100)
 
-# Plot stacked bar chart
+# Debugging Step: Print percent_data
+print("Summarized percentage data:")
+print(percent_data)
+
+# Step 5: Force the graph to output
 ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
   geom_bar(stat = "identity", position = "stack") +
   geom_text(aes(label = sprintf("%.1f%%", Percent)),
@@ -192,7 +243,7 @@ ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
        y = "Percentage",
        fill = "Seed Presence") +
   theme_minimal() +
-  scale_x_discrete(labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+"))
+  scale_x_discrete(labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+"))  # Correct display labels
 ```
 
 ## Explanation
