@@ -41,7 +41,7 @@ summary(anova_result)
 
 ```
 
-Given the past results we can tell the folloing things regarding:
+Given the past results we can tell the following things regarding:
 
 1.  **Treatment**:
 
