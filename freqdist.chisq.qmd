@@ -12,13 +12,14 @@ This report analyzes the relationship between seed count, fruit diameter, and tr
 
 ## Load Required Libraries and Data
 
-```{r}
+```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
 
 # Load the dataset
 data <- read.csv("DATA/frutasysemillas.csv")
+knitr::opts_chunk$set(fig.path = 'results/')
 ```
 
 ## Explanation
@@ -32,6 +33,7 @@ data <- read.csv("DATA/frutasysemillas.csv")
 ## 1. Frequency Distribution of Number of Seeds
 
 ```{r}
+#| label: Frequency distribution
 ggplot(data, aes(x = Nseeds)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black") +
   labs(title = "Frequency Distribution of Number of Seeds",
@@ -51,6 +53,7 @@ ggplot(data, aes(x = Nseeds)) +
 ## 2. Density Curve of Number of Seeds
 
 ```{r}
+#| label: Density Curve of NSeeds
 ggplot(data, aes(x = Nseeds)) +
   geom_density(fill = "lightblue", alpha = 0.7) +
   labs(title = "Density Curve of Number of Seeds",
@@ -68,6 +71,7 @@ ggplot(data, aes(x = Nseeds)) +
 ## 3. Frequency Distribution of Fruit Diameter
 
 ```{r}
+#| label: Frequency for FrDiameter
 ggplot(data, aes(x = FrDiam)) +
   geom_histogram(binwidth = 2, fill = "green", color = "black") +
   labs(title = "Frequency Distribution of Fruit Diameter",
@@ -87,6 +91,7 @@ ggplot(data, aes(x = FrDiam)) +
 ## 4. Density Curve of Fruit Diameter
 
 ```{r}
+#| label: Density FrDiameter
 ggplot(data, aes(x = FrDiam)) +
   geom_density(fill = "lightgreen", alpha = 0.7) +
   labs(title = "Density Curve of Fruit Diameter",
@@ -104,6 +109,7 @@ ggplot(data, aes(x = FrDiam)) +
 ## 5. Number of Seeds by Treatment
 
 ```{r}
+#| label: Number of seeds (treatment)
 ggplot(data, aes(x = Nseeds, fill = Treatment)) +
   geom_histogram(binwidth = 5, color = "black", alpha = 0.7) +
   facet_wrap(~Treatment) +
@@ -122,6 +128,7 @@ ggplot(data, aes(x = Nseeds, fill = Treatment)) +
 ## 6. Density Curve of Seeds by Treatment
 
 ```{r}
+#| label: Density seeds (treatment)
 ggplot(data, aes(x = Nseeds, color = Treatment, fill = Treatment)) +
   geom_density(alpha = 0.4) +
   facet_wrap(~Treatment) +
@@ -140,6 +147,7 @@ ggplot(data, aes(x = Nseeds, color = Treatment, fill = Treatment)) +
 ## 7. Chi-Squared Test: Seeded vs Seedless by Treatment
 
 ```{r}
+#| label: Chi-square (seed vs seedless)
 # Categorize fruits as Seeded or Seedless
 data <- data %>%
   mutate(Seeded = ifelse(Nseeds > 0, "Seeded", "Seedless"))
@@ -175,6 +183,7 @@ cat("P-value:", chi_squared_result$p.value, "\n")
 ## 8. Percentage of Seed Presence by Treatment
 
 ```{r}
+#| label: Percentage of seeds presence
 #chi-squared test to compare seeded versus seedless fruit 
 # Step 1: Create a new column for Seeded and Seedless categorization
 data <- data %>%

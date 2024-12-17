@@ -15,7 +15,7 @@ knitr::opts_chunk$set(fig.path = 'results/')
 # Load the data (replace 'path/to/frutasysemilla.csv' with the correct path or GitHub URL)
 data <- read.csv("DATA/frutasysemillas.csv")
 
-# Descriptive Statistics for Nseeds
+# Descriptive Statistics for Nseed
 nseeds_mean <- mean(data$Nseeds, na.rm = TRUE)
 nseeds_se <- sd(data$Nseeds, na.rm = TRUE) / sqrt(sum(!is.na(data$Nseeds)))
 
