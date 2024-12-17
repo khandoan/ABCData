@@ -13,7 +13,7 @@ This report analyzes the relationship between seed count, fruit diameter, and tr
 ## Load Required Libraries and Data
 
 ```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
-# Load necessary libraries
+# Load necessary librarie
 library(ggplot2)
 library(dplyr)
 
