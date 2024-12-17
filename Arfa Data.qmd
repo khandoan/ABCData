@@ -1,7 +1,8 @@
 ---
-title: "Descriptive Statistics, Correlation, and Visualization"
-author: "Arfa Ghias"
-output: html
+title: "Analysis of Seed and Fruit Data"
+author: "Ana Belem Garcia, Arfa Ghias, Cann Doan, Fatima Tahir"
+date: "2024-06-16"
+format: html
 editor: visual
 ---
 
