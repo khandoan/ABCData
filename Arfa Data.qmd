@@ -8,10 +8,10 @@ editor: visual
 
 ## A. Descriptive Statistics
 
-```{r}
+```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
 # Load necessary libraries
 library(ggplot2)
-
+knitr::opts_chunk$set(fig.path = 'results/')
 # Load the data (replace 'path/to/frutasysemilla.csv' with the correct path or GitHub URL)
 data <- read.csv("DATA/frutasysemillas.csv")
 
@@ -39,6 +39,7 @@ cat("FrDiam: Mean =", frdiam_mean, ", SE =", frdiam_se, "\n")
 Next, we visualize the frequency distribution and density curve for the `Nseeds` variable to understand its distribution.
 
 ```{r}
+#| label: Frequency Distribution and Density Curve
 # Frequency Distribution and Density Curve for Nseeds
 ggplot(data, aes(x = Nseeds)) +
   geom_histogram(aes(y = ..density..), binwidth = 1, fill = "skyblue", color = "black", alpha = 0.7) +
@@ -60,6 +61,7 @@ ggplot(data, aes(x = Nseeds)) +
 In this section, we created a similar plot for the `FrDiam` (Fruit Diameter) variable.
 
 ```{r}
+#| label: Frequency FrDiam
 # Frequency Distribution and Density Curve for FrDiam
 ggplot(data, aes(x = FrDiam)) +
   geom_histogram(aes(y = ..density..), binwidth = 2, fill = "lightgreen", color = "black", alpha = 0.7) +
@@ -93,6 +95,7 @@ cat("Correlation between Fruit Diameter and Seed Count:", correlation, "\n")
 ### Scatterplot with Linear Fit
 
 ```{r}
+#| label: Plot FrDiam vs Nseeds
 # Scatterplot with Linear Fit
 ggplot(data, aes(x = FrDiam, y = Nseeds)) +
   geom_point(color = "blue", alpha = 0.6) +
@@ -124,6 +127,7 @@ summary(lm_model)
 ### Diagnostic Plots for Regression
 
 ```{r}
+#| label: Linear model
 # Plot diagnostic plots for regression model
 par(mfrow = c(2, 2))  # Set plotting area
 plot(lm_model)
@@ -140,6 +144,7 @@ In this section, we visualize the seed counts by treatment using various types o
 ### Box Plot by Treatment
 
 ```{r}
+#| label: Boxplot Treatments
 # Load necessary libraries
 library(ggplot2)
 
@@ -192,6 +197,7 @@ print(summary_data)
 -   **Error Bars**: These represent the uncertainty around the mean seed count for each treatment.
 
     ```{r}
+    #| label: Standard Error Bars
     # Bar Chart with Error Bars
     ggplot(summary_data, aes(x = Treatment, y = Mean, fill = Treatment)) +
       geom_bar(stat = "identity", color = "black", alpha = 0.8) +
@@ -209,6 +215,7 @@ print(summary_data)
 ### Scatterplot of Seed Count vs Fruit Diameter
 
 ```{r}
+#| label: Seed Count vs Fruit Diameter
 # Scatterplot
 ggplot(data, aes(x = FrDiam, y = Nseeds)) +
   geom_point(color = "blue", alpha = 0.6) +
@@ -226,6 +233,7 @@ ggplot(data, aes(x = FrDiam, y = Nseeds)) +
 ### Violin Plot of Seed Counts by Treatment
 
 ```{r}
+#| label: Seed Count Violin
 # Violin Plot
 ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
   geom_violin(trim = FALSE) +
