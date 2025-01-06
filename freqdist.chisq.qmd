@@ -45,7 +45,7 @@ ggplot(data, aes(x = Nseeds)) +
 ## Explanation
 
 ```         
-•   A histogram shows the frequency distribution of number of seeds per fruit.
+•   The histogram visualizes the frequency distribution of the number of seeds per fruit (Nseeds) in the dataset. By grouping seed counts into bins, it provides an overview of how seeds are distributed across the samples. This helps identify patterns such as whether the seed counts are normally distributed, skewed, or clustered. The majority of observations fall into the first bin, representing zero seeds, with a frequency exceeding 600. This indicates that most of the fruits in the dataset are seedless.
 
 •   binwidth = 5 groups the seeds into intervals of 5.
 ```
@@ -65,7 +65,8 @@ ggplot(data, aes(x = Nseeds)) +
 ## Explanation
 
 ```         
-•   A density curve shows the probability distribution of the number of seeds.
+•   The density curve has a very high peak near 0, indicating that most observations have no seeds (seedless fruits). This confirms the dominance of seedless fruits seen in the histogram.
+Smaller peaks are visible around 1, 2, and 3 seeds, suggesting these counts are relatively more common compared to higher seed counts. These smaller peaks may reflect specific biological or treatment effects leading to occasional low seed counts. The curve drops off steeply after the first peak, with density approaching zero for seed counts greater than 5. This indicates that fruits with more than 5 seeds are extremely rare in this dataset. The plot is heavily right-skewed, with a long tail extending toward higher seed counts. Most of the density is concentrated near zero, and very little is distributed across the higher range.
 ```
 
 ## 3. Frequency Distribution of Fruit Diameter
@@ -83,7 +84,7 @@ ggplot(data, aes(x = FrDiam)) +
 ## Explanation
 
 ```         
-•   A histogram shows the frequency distribution of fruit diameter in mm.
+•   This graph shows the Frequency Distribution of Fruit Diameter in millimeters. It provides a visual representation of how fruit diameters are distributed in the dataset. The histogram exhibits a bell-shaped curve, suggesting that the fruit diameters follow a normal distribution. Most of the fruits have diameters clustered around the central range (approximately 55–65 mm). The highest frequency (peak) occurs between 55–60 mm, indicating that this is the most common range for fruit diameters in the dataset. The distribution appears fairly symmetric, with the frequencies on both sides of the peak gradually tapering off. The diameters range from around 30 mm to 80 mm, but values near the extremes are much less frequent.  The tails are relatively thin, with very few fruits having diameters less than 40 mm or greater than 75 mm. The central tendency (mean or median) likely falls near the peak, around 55–60 mm. This represents the typical fruit size in the dataset. The narrow spread of the data around the peak suggests low variability in fruit size, with most fruits being close to the average diameter. A few fruits with smaller diameters (below 40 mm) or larger diameters (above 75 mm) might be outliers, though their low frequency does not significantly affect the overall distribution.
 
 •   Binwidth is set to 2 for clarity.
 ```
@@ -103,7 +104,7 @@ ggplot(data, aes(x = FrDiam)) +
 ## Explanation
 
 ```         
-•   A density curve shows the probability distribution of fruit diameter.
+•   This graph is a Density Curve of Fruit Diameter, providing a smooth estimation of the probability density function for fruit diameters in millimeters. The density curve highlights the distribution of the data in a continuous form. The curve shows a single prominent peak around 60 mm, indicating that this diameter is the most frequent (mode) in the dataset. The curve is fairly symmetric, with a gradual rise and fall on either side of the peak. This suggests that the fruit diameters are approximately normally distributed. The data covers a range from about 30 mm to 80 mm, with very low density at the extremes. Most of the density is concentrated between 50 mm and 70 mm. The tails on both sides taper off smoothly, indicating fewer fruits with extremely small or large diameters. The peak near 60 mm aligns with the central tendency (mean or median) of the dataset, representing the typical fruit size. The relatively narrow spread around the peak suggests that fruit diameters do not vary widely within the dataset. The symmetric, unimodal shape indicates consistency in factors like growing conditions, treatments, or genetics influencing fruit size. Unlike right- or left-skewed distributions, this dataset appears well-balanced, with equal representation of smaller and larger fruits around the average. The density curve complements the histogram by providing a smoother visualization of the distribution without the limitations of bin sizes. Both visualizations confirm the normal-like distribution of fruit diameters.
 ```
 
 ## 5. Number of Seeds by Treatment
@@ -122,7 +123,20 @@ ggplot(data, aes(x = Nseeds, fill = Treatment)) +
 ## Explanation
 
 ```         
-•   This histogram displays the number of seeds by **treatment** using **facets** to separate treatments.
+•   This graph shows the Frequency Distribution of Number of Seeds by Treatment, with each treatment (A, B, C, D, E) displayed as a separate histogram. It provides a comparative visualization of seed counts across different treatments. All treatments show a strong dominance of seedless fruits (0 seeds), consistent with the overall dataset trends. A smaller proportion of fruits in all treatments have more than 1 seed, with frequencies decreasing as the number of seeds increases.
+
+Treatment A:
+Most fruits are seedless, with a small frequency of fruits having 1–3 seeds.
+Treatment B:
+Nearly all fruits are seedless, with no significant presence of fruits with more than 0 seeds.
+Treatment C:
+Strong dominance of seedless fruits, with a very small number of fruits having seeds. Seeded fruits are extremely rare in this treatment.
+Treatment D:
+Similar to Treatment A, with the majority being seedless and a slightly higher frequency of fruits having 1–3 seeds.
+Treatment E:
+Predominantly seedless fruits, with very few fruits having 1–2 seeds.
+	
+While there are slight variations in the frequency of seeded fruits across treatments, the general trend is consistent: seedless fruits dominate, and higher seed counts are rare. All treatments appear to suppress seed production effectively, resulting in a high proportion of seedless fruits. Treatment B and C show the most pronounced suppression, with virtually no fruits having more than 0 seeds.
 ```
 
 ## 6. Density Curve of Seeds by Treatment
@@ -141,7 +155,22 @@ ggplot(data, aes(x = Nseeds, color = Treatment, fill = Treatment)) +
 ## Explanation
 
 ```         
-•   Density plots show the seed distribution across treatments, with transparency for overlapping curves.
+•   This graph presents Density Curves of Number of Seeds by Treatment (A, B, C, D, E), offering a smooth visualization of seed count distributions for each treatment. Unlike histograms, these density plots provide a continuous view of the probability density, making it easier to observe trends and patterns within each treatment.
+
+Treatment A:
+The density is highest at 0 seeds and decreases gradually.A small tail extends toward higher seed counts, but the density becomes negligible beyond 5 seeds.
+Treatment B:
+A sharp peak at 0 seeds, indicating almost all fruits are seedless. Virtually no density beyond 0 seeds, suggesting this treatment produces nearly 100% seedless fruits.
+Treatment C:
+A pronounced peak at 0 seeds, similar to Treatment B, but with a slightly longer tail. Some density is observed between 1–3 seeds, though it is minimal compared to the peak.
+Treatment D:
+Similar to Treatment A, with a peak at 0 seeds and a gradual decline in density as seed counts increase. A slightly higher tail density compared to Treatments B and C, suggesting more fruits with small numbers of seeds.
+Treatment E:
+Similar to Treatment D, with a high density at 0 seeds and a gradual decrease for higher seed counts. The tail extends slightly longer, but density remains low beyond 3 seeds.
+
+All treatments exhibit a peak at 0 seeds, confirming that seedless fruits are the most common outcome across all treatments. Treatment B appears to be the most effective at producing seedless fruits, with almost no density beyond 0 seeds. Treatment C follows closely, though it allows for a small proportion of seeded fruits. Treatments A, D, and E show slightly more variability, with some fruits having 1–3 seeds. Treatments A, D, and E have longer tails compared to B and C, suggesting they are less consistent in suppressing seed development.
+
+The density curves highlight the effectiveness of each treatment in producing seedless fruits, with Treatment B showing the strongest results. Treatments A, D, and E are slightly less consistent, producing more fruits with low seed counts. 
 ```
 
 ## 7. Chi-Squared Test: Seeded vs Seedless by Treatment
@@ -173,11 +202,23 @@ cat("P-value:", chi_squared_result$p.value, "\n")
 ## Explanation
 
 ```         
-1.  Fruits are categorized as **Seeded** (Nseeds \> 0) or **Seedless**.
+The contingency table summarizes the counts of seeded and seedless fruits across five treatments (A, B, C, D, E):
 
-2.  A contingency table and percentages are generated for **Seeded vs. Seedless** across treatments.
+Treatment B:
+Produces only seedless fruits (100% seedless, 0% seeded).
+This suggests that Treatment B is the most effective at preventing seed formation.
+Treatment C:
+A majority of the fruits are seedless (74.07%), though a small proportion (25.93%) still have seeds.
+Treatments A, D, and E:
+These treatments show a more balanced split between seeded and seedless fruits, with seedless fruits accounting for around 51–52% of the total.
 
-3.  The **Chi-squared test** checks for significant associations between seed presence and treatment.
+The percentage table provides the proportion of seeded and seedless fruits within each treatment:
+
+Treatment B stands out with 100% seedless fruits, clearly demonstrating its superior effectiveness. Treatments A, D, and E have a nearly even split between seeded and seedless fruits, indicating lower effectiveness in producing seedless fruits compared to B and C.
+
+The chi-squared test statistic is 106.0561, indicating a large deviation between the observed and expected frequencies under the null hypothesis. A high chi-square value suggests that the distribution of seeded and seedless fruits varies significantly across treatments. The p-value is 5.04 × 10⁻²², which is extremely small (essentially zero). A p-value this small strongly rejects the null hypothesis. This indicates that the differences in the proportions of seeded and seedless fruits across treatments are statistically significant.
+
+Treatment B is the most effective at producing seedless fruits, followed by Treatment C. Treatments A, D, and E are less effective, with more balanced proportions of seeded and seedless fruits. The chi-square test confirms that the observed differences in seed presence across treatments are not due to random chance. Treatment B is likely the best candidate for applications where seedlessness is a priority. Treatments C, D, and E might still be useful, but with less consistent results.
 ```
 
 ## 8. Percentage of Seed Presence by Treatment
@@ -258,9 +299,25 @@ ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
 ## Explanation
 
 ```         
-•   Percentages of **Seeded** and **Seedless** fruits are calculated for each treatment.
+This stacked bar chart illustrates the Percentage of Seed Presence by Treatment, comparing the proportion of seeded (TRUE) and seedless (FALSE) fruits across five treatments.
 
-•   A **stacked bar chart** visualizes these percentages, with labels added for clarity.
+Treatment B (C-, Negative Control):
+100% seedless fruits were observed, as expected for the negative control.
+	
+Treatment CuGA:
+25.9% of fruits are seeded, while 74.1% are seedless. This treatment demonstrates strong suppression of seed development but is less effective than the control in achieving full seedlessness.
+
+Treatment ZnRep:
+A near-even split, with 47.6% seeded and 52.4% seedless fruits. This treatment shows moderate effectiveness, with seed suppression comparable to a coin toss.
+
+Treatment CapRep:
+Similarly, 48.6% seeded and 51.4% seedless. The results are almost identical to ZnRep, suggesting these two treatments have similar impacts on seed suppression.
+
+Treatment C+:
+49.0% seeded and 51.0% seedless. This treatment is also comparable to ZnRep and CapRep in its ability to produce seedless fruits.
+
+Effectiveness of Treatments:
+CuGA stands out as the most effective active treatment, with the highest proportion of seedless fruits (74.1%). ZnRep, CapRep, and C+ perform similarly, with roughly equal proportions of seeded and seedless fruits, indicating lower effectiveness compared to CuGA.
 ```
 
 ## Conclusion
