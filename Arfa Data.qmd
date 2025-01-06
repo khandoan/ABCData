@@ -6,9 +6,9 @@ format: html
 editor: visual
 ---
 
-## A. Descriptive Statistics
+## A. Descriptive Statistics 
 
-```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
+```{r setup, include=FALSE}
 # Load necessary libraries
 library(ggplot2)
 knitr::opts_chunk$set(fig.path = 'results/')
