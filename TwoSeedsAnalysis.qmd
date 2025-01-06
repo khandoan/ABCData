@@ -5,7 +5,7 @@ format: html
 editor: visual
 ---
 
-```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
+```{r setup, include=FALSE}
 #install.packages("dplyr")
 #install.packages("knitr")
 #install.packages("ggplot2")
