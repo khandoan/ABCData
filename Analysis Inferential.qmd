@@ -5,7 +5,7 @@ format: html
 editor: visual
 ---
 
-```{r setup, include=FALSE, echo=TRUE, fig.width=8, fig.height=6, fig.show='hold'}
+```{r setup, include=FALSE}
 #install.packages("dplyr")
 #install.packages("knitr")
 #install.packages("ggplot2")
@@ -101,9 +101,8 @@ print(agricolae_result$groups)
 
     -   This confirms that **no intervention (B)** results in **no seed production**, as expected.
 
-```{=html}
 <!-- -->
-```
+
 -   **Positive Control (A):**
 
     -   The mean for A is **0.986** and belongs to group **"ab"**, indicating it performs **significantly better than the negative control (B)**.
@@ -238,4 +237,4 @@ According to the given graph:
 
 -   **ZnRep (D)** and **CapRep (E)** are the least desirable treatments since they resulted in the **highest seed production**.
 
-Thus, you should prioritize treatments that either have **no seeds (B)** or minimize seed count, such as **CuGA (C)**, to achieve fruits with the fewest seeds.
+Thus, we should prioritize treatments that either have **no seeds (B)** or minimize seed count, such as **CuGA (C)**, to achieve fruits with the fewest seeds.
