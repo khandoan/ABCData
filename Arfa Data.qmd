@@ -6,7 +6,7 @@ format: html
 editor: visual
 ---
 
-## A. Descriptive Statistics 
+## A. Descriptive Statistics
 
 ```{r setup, include=FALSE}
 # Load necessary libraries
@@ -249,7 +249,7 @@ ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
 
 -   **Violin Plot**: The violin plot visualizes the distribution of `Nseeds` for each treatment, showing the kernel density estimate along with a box plot inside the violin to represent summary statistics.
 
-## **Recommendation for Visualizations:** 
+## **Recommendation for Visualizations:**
 
 -   For understanding the overall distribution of data, **density plots** are effective as they highlight the shape of the distribution better.
 -   For comparing treatments, **box plots** and **violin plots** clearly show variations and central tendencies.

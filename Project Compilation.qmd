@@ -1,0 +1,648 @@
+---
+title: "Analysis of seed and fruit data"
+author: "Arfa Ghias, Ana Belem, Cann Doan, Fatima Tahir"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+#install.packages("dplyr")
+#install.packages("knitr")
+#install.packages("ggplot2")
+#install.packages("agricolae")
+
+
+library(dplyr)
+library(knitr)
+library(ggplot2)
+library(agricolae)
+
+#Folder for results
+knitr::opts_chunk$set(fig.path = 'results/')
+```
+
+## A. Descriptive Statistics
+
+```{r setup, include=FALSE}
+# Load necessary libraries
+library(ggplot2)
+knitr::opts_chunk$set(fig.path = 'results/')
+# Load the data (replace 'path/to/frutasysemilla.csv' with the correct path or GitHub URL)
+data <- read.csv("DATA/frutasysemillas.csv")
+
+# Descriptive Statistics for Nseed
+nseeds_mean <- mean(data$Nseeds, na.rm = TRUE)
+nseeds_se <- sd(data$Nseeds, na.rm = TRUE) / sqrt(sum(!is.na(data$Nseeds)))
+
+# Descriptive Statistics for FrDiam
+frdiam_mean <- mean(data$FrDiam, na.rm = TRUE)
+frdiam_se <- sd(data$FrDiam, na.rm = TRUE) / sqrt(sum(!is.na(data$FrDiam)))
+
+# Print results
+cat("Nseeds: Mean =", nseeds_mean, ", SE =", nseeds_se, "\n")
+cat("FrDiam: Mean =", frdiam_mean, ", SE =", frdiam_se, "\n")
+```
+
+### Explanation:
+
+-   **Mean**: We calculate the mean for `Nseeds` (Seed Count) and `FrDiam` (Fruit Diameter).
+
+-   **Standard Error (SE)**: The standard error is computed by dividing the standard deviation by the square root of the sample size. This helps estimate the precision of the mean.
+
+### Frequency Distribution and Density Curve for `Nseeds`
+
+Next, we visualize the frequency distribution and density curve for the `Nseeds` variable to understand its distribution.
+
+```{r}
+#| label: Frequency Distribution and Density Curve
+# Frequency Distribution and Density Curve for Nseeds
+ggplot(data, aes(x = Nseeds)) +
+  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "skyblue", color = "black", alpha = 0.7) +
+  geom_density(color = "red", size = 1) +
+  ggtitle("Frequency Distribution and Density Curve: Nseeds") +
+  xlab("Nseeds") +
+  ylab("Density") +
+  theme_minimal()
+```
+
+### Explanation:
+
+-   **Histogram**: The histogram represents the frequency distribution of `Nseeds`, with the density curve overlaid to show the estimated probability density of the data.
+
+-   **Density Curve**: The red curve provides a smoothed representation of the distribution of `Nseeds`.
+
+## Frequency Distribution and Density Curve for `FrDiam`
+
+In this section, we created a similar plot for the `FrDiam` (Fruit Diameter) variable.
+
+```{r}
+#| label: Frequency FrDiam
+# Frequency Distribution and Density Curve for FrDiam
+ggplot(data, aes(x = FrDiam)) +
+  geom_histogram(aes(y = ..density..), binwidth = 2, fill = "lightgreen", color = "black", alpha = 0.7) +
+  geom_density(color = "red", size = 1) +
+  ggtitle("Frequency Distribution and Density Curve: FrDiam") +
+  xlab("FrDiam") +
+  ylab("Density") +
+  theme_minimal()
+```
+
+### Explanation:
+
+-   **Histogram**: This histogram represents the distribution of the `FrDiam` variable, with density plotted over it.
+
+-   **Density Curve**: The density curve helps to visualize the smooth shape of the distribution for `FrDiam`.
+
+## **B.** Correlation and Regression Analysis
+
+Here, we explored the relationship between `Nseeds` and `FrDiam` using correlation and regression analysis.
+
+### Correlation Analysis
+
+```{r}
+# Correlation Analysis between Nseeds and FrDiam
+correlation <- cor(data$FrDiam, data$Nseeds, use = "complete.obs", method = "pearson")
+cat("Correlation between Fruit Diameter and Seed Count:", correlation, "\n")
+```
+
+-   **Correlation**: We compute the Pearson correlation between `Nseeds` and `FrDiam`, which measures the strength and direction of the linear relationship between the two variables.
+
+### Scatterplot with Linear Fit
+
+```{r}
+#| label: Plot FrDiam vs Nseeds
+# Scatterplot with Linear Fit
+ggplot(data, aes(x = FrDiam, y = Nseeds)) +
+  geom_point(color = "blue", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(title = "Scatterplot with Linear Fit: Seed Count vs Fruit Diameter",
+       x = "Fruit Diameter",
+       y = "Seed Count") +
+  theme_minimal()
+```
+
+### Explanation:
+
+-   **Scatterplot**: The scatterplot shows the relationship between `FrDiam` (Fruit Diameter) and `Nseeds` (Seed Count).
+
+-   **Linear Fit**: The red line represents a linear regression model fit to the data, indicating the trend between the two variables.
+
+### Linear Regression Model
+
+```{r}
+# Linear Regression Model
+lm_model <- lm(Nseeds ~ FrDiam, data = data)
+summary(lm_model)
+```
+
+### Explanation:
+
+-   **Linear Regression**: We fit a linear regression model to predict `Nseeds` based on `FrDiam`. The model summary provides details like the coefficients, R-squared value, and p-value.
+
+### Diagnostic Plots for Regression
+
+```{r}
+#| label: Linear model
+# Plot diagnostic plots for regression model
+par(mfrow = c(2, 2))  # Set plotting area
+plot(lm_model)
+```
+
+### Explanation:
+
+-   **Diagnostic Plots**: These plots are checked the assumptions of the linear regression model, such as homoscedasticity (constant variance), normality of residuals, and linearity.
+
+## **C. Categorical** Analysis
+
+## Chi-Squared Test: Seeded vs Seedless by Treatment
+
+```{r}
+#| label: Chi-square (seed vs seedless)
+# Categorize fruits as Seeded or Seedless
+data <- data %>%
+  mutate(Seeded = ifelse(Nseeds > 0, "Seeded", "Seedless"))
+
+# Create a contingency table
+contingency_table <- table(data$Seeded, data$Treatment)
+
+# Calculate percentages
+percentage_table <- prop.table(contingency_table, margin = 2) * 100
+
+# Perform Chi-squared Test
+chi_squared_result <- chisq.test(contingency_table)
+
+# Print results
+cat("Contingency Table:\n")
+print(contingency_table)
+cat("\nPercentage Table:\n")
+print(round(percentage_table, 2))
+cat("\nChi-squared Statistic (X^2):", chi_squared_result$statistic, "\n")
+cat("P-value:", chi_squared_result$p.value, "\n")
+```
+
+## **Explanation:** 
+
+The contingency table summarizes the counts of seeded and seedless fruits across five treatments (A, B, C, D, E):
+
+Treatment B: Produces only seedless fruits (100% seedless, 0% seeded). This suggests that Treatment B is the most effective at preventing seed formation. Treatment C: A majority of the fruits are seedless (74.07%), though a small proportion (25.93%) still have seeds. Treatments A, D, and E: These treatments show a more balanced split between seeded and seedless fruits, with seedless fruits accounting for around 51–52% of the total.
+
+The percentage table provides the proportion of seeded and seedless fruits within each treatment:
+
+Treatment B stands out with 100% seedless fruits, clearly demonstrating its superior effectiveness. Treatments A, D, and E have a nearly even split between seeded and seedless fruits, indicating lower effectiveness in producing seedless fruits compared to B and C.
+
+The chi-squared test statistic is 106.0561, indicating a large deviation between the observed and expected frequencies under the null hypothesis. A high chi-square value suggests that the distribution of seeded and seedless fruits varies significantly across treatments. The p-value is 5.04 × 10⁻²², which is extremely small (essentially zero). A p-value this small strongly rejects the null hypothesis. This indicates that the differences in the proportions of seeded and seedless fruits across treatments are statistically significant.
+
+Treatment B is the most effective at producing seedless fruits, followed by Treatment C. Treatments A, D, and E are less effective, with more balanced proportions of seeded and seedless fruits. The chi-square test confirms that the observed differences in seed presence across treatments are not due to random chance. Treatment B is likely the best candidate for applications where seedlessness is a priority. Treatments C, D, and E might still be useful, but with less consistent results.
+
+## 8. Percentage of Seed Presence by Treatment
+
+```{r}
+#| label: Percentage of seeds presence
+#chi-squared test to compare seeded versus seedless fruit 
+# Step 1: Create a new column for Seeded and Seedless categorization
+data <- data %>%
+  mutate(Seeded = ifelse(Nseeds > 0, "Seeded", "Seedless"))  # Categorize fruits
+
+# Step 2: Create a contingency table for Seeded vs Seedless fruits by Treatment
+contingency_table <- table(data$Seeded, data$Treatment)
+
+# Step 3: Calculate percentages
+percentage_table <- prop.table(contingency_table, margin = 2) * 100  # Percentage by Treatment
+
+# Step 4: Run the Chi-Squared Test
+chi_squared_result <- chisq.test(contingency_table)
+
+# Step 5: Extract Chi-squared statistic and p-value
+x2_value <- chi_squared_result$statistic
+p_value <- chi_squared_result$p.value
+
+# Step 6: Print results
+cat("Contingency Table:\n")
+print(contingency_table)
+cat("\nPercentage Table (Seeded vs Seedless by Treatment):\n")
+print(round(percentage_table, 2))  # Rounded for clarity
+cat("\nChi-squared Statistic (X^2):", x2_value, "\n")
+cat("P-value:", p_value, "\n")
+
+#Figure 5 Plot
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
+# Step 1: Exclude NA values in key columns
+data <- data %>%
+  filter(!is.na(Nseeds), !is.na(FrDiam), !is.na(Treatment))  # Remove rows with NA values
+
+# Step 2: Categorize Seed Presence
+data <- data %>%
+  mutate(SeedPresence = ifelse(Nseeds > 0, "TRUE", "FALSE"))  # Categorize as Seeded or Seedless
+
+# Step 3: Check and force Treatment levels
+data$Treatment <- factor(data$Treatment, 
+                         levels = c("B", "C", "D", "E", "A"))  # Order: C-, CuGA, ZnRep, CapRep, C+
+
+# Debugging Step: Print treatment levels
+print("Treatment levels after ordering:")
+print(levels(data$Treatment))
+
+# Step 4: Calculate Percentages by Treatment and SeedPresence
+percent_data <- data %>%
+  group_by(Treatment, SeedPresence) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  group_by(Treatment) %>%
+  mutate(Percent = (Count / sum(Count)) * 100)
+
+# Debugging Step: Print percent_data
+print("Summarized percentage data:")
+print(percent_data)
+
+# Step 5: Force the graph to output
+ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = sprintf("%.1f%%", Percent)),
+            position = position_stack(vjust = 0.5), color = "white", size = 4) +
+  labs(title = "Percentage of Seed Presence by Treatment",
+       x = "Treatment",
+       y = "Percentage",
+       fill = "Seed Presence") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+"))  # Correct display labels
+```
+
+## Explanation
+
+This stacked bar chart illustrates the Percentage of Seed Presence by Treatment, comparing the proportion of seeded (TRUE) and seedless (FALSE) fruits across five treatments.
+
+Treatment B (C-, Negative Control): 100% seedless fruits were observed, as expected for the negative control.
+
+Treatment CuGA: 25.9% of fruits are seeded, while 74.1% are seedless. This treatment demonstrates strong suppression of seed development but is less effective than the control in achieving full seedlessness.
+
+Treatment ZnRep: A near-even split, with 47.6% seeded and 52.4% seedless fruits. This treatment shows moderate effectiveness, with seed suppression comparable to a coin toss.
+
+Treatment CapRep: Similarly, 48.6% seeded and 51.4% seedless. The results are almost identical to ZnRep, suggesting these two treatments have similar impacts on seed suppression.
+
+Treatment C+: 49.0% seeded and 51.0% seedless. This treatment is also comparable to ZnRep and CapRep in its ability to produce seedless fruits.
+
+Effectiveness of Treatments: CuGA stands out as the most effective active treatment, with the highest proportion of seedless fruits (74.1%). ZnRep, CapRep, and C+ perform similarly, with roughly equal proportions of seeded and seedless fruits, indicating lower effectiveness compared to CuGA.
+
+## Conclusion
+
+This analysis examined seed count, fruit diameter, and treatment effects on fruit development. The Chi-squared test evaluated the relationship between treatments and seed presence, and visualizations provided deeper insights into distributions.
+
+## **D. Inferential statistics**
+
+## ANOVA
+
+ANOVAs were used to compare the mean values between treatments and blocks.
+
+```{r}
+#| label: ANOVA
+# dir("DATA")
+data.seeds <- read.csv("DATA/frutasysemillas.csv")
+
+# Remove rows with missing Nseeds
+data_clean <- na.omit(data.seeds[, c("Treatment", "Block", "Nseeds")])
+
+# Perform ANOVA
+anova_result <- aov(Nseeds ~ Treatment + Block, data = data_clean)
+summary(anova_result)
+
+
+```
+
+Given the past results we can tell the following things regarding:
+
+1.  **Treatment**:
+
+    -   The effect of the treatments (CuGA, ZnRep, CapRep) on the response variable (**Nseeds**) is **significant**.
+
+    -   The very small p-value (**2.91e-12**) tells us that **at least one treatment group is different** from the others.
+
+2.  **Block**:
+
+    -   The "Block" factor (replicates) also has a **significant effect** on the number of seeds. This means the blocking variable explains some of the variation in your data.
+
+3.  **Residuals**:
+
+    -   Residuals represent the **unexplained variability** after accounting for treatments and blocks.
+
+#### **Conclusion**:
+
+-   Both the **treatment** and the **block** factors influence the response variable (**Nseeds**).
+
+-   Since the treatment effect is significant, we performed a **post-hoc test** ( Tukey's test) to find out **which treatment groups differ** from each other.
+
+### General effect of blocks on number of seeds
+
+```{r}
+ggplot(data_clean, aes(x = Block, y = Nseeds, fill = Block)) +
+  geom_boxplot(alpha = 0.7) +
+  theme_minimal() +
+  labs(title = "Effect of Blocks on Number of Seeds",
+       x = "Block",
+       y = "Number of Seeds") +
+  scale_fill_brewer(palette = "Set3")
+```
+
+### Interaction between blocks and treatments
+
+```{r}
+interaction.plot(x.factor = data_clean$Treatment, 
+                 trace.factor = data_clean$Block, 
+                 response = data_clean$Nseeds, 
+                 col = rainbow(length(unique(data_clean$Block))), 
+                 legend = TRUE,
+                 xlab = "Treatment", 
+                 ylab = "Mean Number of Seeds",
+                 main = "Interaction Between Treatment and Block")
+```
+
+## Tukey test
+
+The **Tukey's post-hoc test** results helps to identify which **pairs of groups** (treatments and blocks) are significantly different after running the ANOVA.
+
+```{r}
+tukey_result <- TukeyHSD(anova_result)
+tukey_result
+```
+
+### **Interpretation of Treatments**:
+
+-   **Significant Differences** (p \< 0.05):
+
+    -   **B-A**: Group B has a significantly lower mean than Group A.
+
+    -   **C-B, D-B, E-B**: Groups C, D, and E have significantly higher means than Group B.
+
+    -   **D-C and E-C**: Groups D and E have significantly higher means than Group C.
+
+-   **Non-Significant Differences**:
+
+    -   **C-A, D-A, E-A, and E-D**: These groups do not show significant differences.
+
+        ## **HSD test**
+
+The HSD test is needed to **clearly group** the treatments based on performance and identify which are significantly different.
+
+```{r}
+agricolae_result <- HSD.test(anova_result, "Treatment", group = TRUE)
+print(agricolae_result$groups)
+```
+
+-   **Negative Control (B):**
+
+    -   The mean for B is **0 (lowest group)** and is significantly different from all other treatments.
+
+    -   This confirms that **no intervention (B)** results in **no seed production**, as expected.
+
+-   **Positive Control (A):**
+
+    -   The mean for A is **0.986** and belongs to group **"ab"**, indicating it performs **significantly better than the negative control (B)**.
+
+    -   However, it is **not significantly better than treatments E and D**, meaning these two treatments perform as well as (or slightly better than) the positive control.
+
+## Shapiro Test
+
+The Shapiro-Wilk test is a formal statistical test for normality. The null hypothesis (**H0**) is that the data is **normally distributed**.
+
+```{r}
+#| label: Shapiro test
+group_counts_nseeds <- data_clean %>%
+  group_by(Treatment) %>%
+  summarise(unique_count = n_distinct(Nseeds))
+
+# Filter out treatments with only one unique value in 'Nseeds'
+data_filtered_nseeds <- data_clean %>%
+  filter(Treatment %in% group_counts_nseeds$Treatment[group_counts_nseeds$unique_count > 1])
+
+# Perform the Shapiro-Wilk test on filtered data
+shapiro_result_nseeds <- data_filtered_nseeds %>%
+  group_by(Treatment) %>%
+  summarise(p_value = shapiro.test(Nseeds)$p.value)
+
+# Print the results
+print(shapiro_result_nseeds)
+# Plot the histogram and QQ plot again
+ggplot(data_filtered_nseeds, aes(x = Nseeds)) +
+  geom_histogram(bins = 30, fill = "blue", alpha = 0.7) +
+  facet_wrap(~ Treatment) +
+  theme_minimal() +
+  labs(title = "Histogram of Number of Seeds",
+       x = "Number of Seeds (Nseeds)",
+       y = "Frequency")
+
+ggplot(data_filtered_nseeds, aes(sample = Nseeds)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~ Treatment) +
+  theme_minimal() +
+  labs(title = "QQ Plot by Treatment")
+#This plots show whether this analysis follows Normality.
+#The graphs show non-normal distribution
+```
+
+A **p-value \< 0.05** means we reject the null hypothesis and conclude the data is **not normally distributed**.
+
+In this case the results let us interpret that:
+
+-   **A**: p = 3.03e-14 → **Reject H₀** (not normal)
+
+-   **C**: p = 1.27e-23 → **Reject H₀** (not normal)
+
+-   **D**: p = 3.88e-15 → **Reject H₀** (not normal)
+
+-   **E**: p = 1.75e-15 → **Reject H₀** (not normal)
+
+Since the normality assumption is violated, we needed to use **non-parametric** alternatives like the **Kruskal-Wallis test** instead of ANOVA. The Kruskal-Wallis test does not assume normality.
+
+## Kruskal-Wallis Test
+
+**Due to lack of normality**, nonparametric methods were selected to compare the means among treatments and blocks by a Kruskal-Wallis rank sum test. 
+
+```{r}
+#| label: Kruskal-Wallis
+tukey_result <- HSD.test(anova_result, "Treatment", group = TRUE)
+tukey_groups <- data.frame(
+  Treatment = rownames(tukey_result$groups),
+  Group = tukey_result$groups$groups
+)
+
+# Calculate means and standard errors for each treatment
+summary_data <- data.seeds %>%
+  group_by(Treatment) %>%
+  summarise(
+    mean = mean(Nseeds, na.rm = TRUE),
+    se = sd(Nseeds, na.rm = TRUE) / sqrt(n())
+  )
+  #The standard error measures the precision of the sample mean as an estimate of the population mean.
+  #Without dividing by the sqrt the result would simply be the standard deviation, 
+  #which measures the spread of individual data points, not the precision of the group mean.
+
+
+# Merge Tukey groups with summary data
+summary_data <- left_join(summary_data, tukey_groups, by = "Treatment")
+
+
+summary_data$Treatment <- factor(summary_data$Treatment, levels = c("B", "C", "D", "E", "A"))
+
+# Define custom colors for the bars
+custom_colors <- c(
+  "B" = "#1f77b4",  # Blue
+  "C" = "#ff7f0e",  # Orange
+  "D" = "#2ca02c",  # Green
+  "E" = "#d62728",  # Red
+  "A" = "#9467bd"   # Purple
+)
+
+# Define custom labels for the x-axis
+x_axis_labels <- c(
+  "(-) Control (B)",
+  "CuGA (C)",
+  "ZnRep (D)",
+  "CapRep (E)",
+  "+ Control (A)"
+)
+# Create the bar plot with error bars and Tukey groups
+ggplot(summary_data, aes(x = Treatment, y = mean, fill = Treatment)) +
+  geom_bar(stat = "identity", color = "black", width = 0.7) +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.2) +
+  geom_text(aes(label = Group, y = mean + se + 0.1), vjust = 0) +
+  labs(title = "Mean Number of Seeds by Treatment",
+       x = "Treatment",
+       y = "Mean Number of Seeds",
+       fill = "Treatments") +
+  theme_minimal() +
+  scale_fill_manual(values = custom_colors) +  # Apply custom bar colors
+  scale_x_discrete(labels = x_axis_labels) +  # Use custom x-axis labels
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5),  # Rotate x-axis labels
+        legend.position = "right")
+
+```
+
+According to the given graph:
+
+-   **The best option is the negative control (B)**, as it produced the **fewest seeds**.
+
+-   **CuGA (C)** could also be useful, as it significantly reduced seed count, although it’s not as effective as the **negative control**.
+
+-   **ZnRep (D)** and **CapRep (E)** are the least desirable treatments since they resulted in the **highest seed production**.
+
+Thus, we should prioritize treatments that either have **no seeds (B)** or minimize seed count, such as **CuGA (C)**, to achieve fruits with the fewest seeds.
+
+## E. Visualization Techniques
+
+In this section, we visualize the seed counts by treatment using various types of plots.
+
+### Box Plot by Treatment
+
+```{r}
+#| label: Boxplot Treatments
+# Load necessary libraries
+library(ggplot2)
+
+# Ensure Treatment is a factor and ordered correctly
+data$Treatment <- factor(data$Treatment, levels = c("A", "B", "C", "D", "E"))
+
+# Define colors for each treatment
+treatment_colors <- c("A" = "#1f77b4",  # Blue for Negative Control
+                      "B" = "#ff7f0e",  # Orange for Variable 1
+                      "C" = "#2ca02c",  # Green for Variable 2
+                      "D" = "#d62728",  # Red for Variable 3
+                      "E" = "#9467bd")  # Purple for Positive Control
+
+# Create the box plot
+ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
+  geom_boxplot() +  # Draw box plots
+  scale_fill_manual(values = treatment_colors) +  # Assign colors
+  labs(title = "Box Plot of Seed Counts by Treatment",
+       x = "Treatment",
+       y = "Seed Count") +
+  theme_minimal()
+```
+
+### Explanation:
+
+-   **Box Plot**: The box plot visualizes the distribution of `Nseeds` for each treatment, showing the median, quartiles, and outliers. Each treatment is colored differently for clarity.
+
+    ## **Bar Chart with Error Bars**
+
+    ```{r}
+    # Load necessary libraries
+    library(dplyr)
+
+    # Calculate means and confidence intervals
+    summary_data <- data %>%
+      group_by(Treatment) %>%
+      summarise(Mean = mean(Nseeds, na.rm = TRUE),
+                SE = sd(Nseeds, na.rm = TRUE) / sqrt(n()),
+                Lower = Mean - qt(1 - 0.05 / 2, n() - 1) * SE,
+                Upper = Mean + qt(1 - 0.05 / 2, n() - 1) * SE)
+
+    # View the summary data
+    print(summary_data)
+    ```
+
+### Explanation:
+
+-   **Summary Statistics**: We calculate the mean and standard error (SE) for `Nseeds` by treatment, along with the confidence intervals (Lower and Upper).
+
+-   **Error Bars**: These represent the uncertainty around the mean seed count for each treatment.
+
+```{r}
+#| label: Standard Error Bars
+# Bar Chart with Error Bars
+ggplot(summary_data, aes(x = Treatment, y = Mean, fill = Treatment)) +
+  geom_bar(stat = "identity", color = "black", alpha = 0.8) +
+  geom_errorbar(aes(ymin = Lower, ymax = Upper), width = 0.2) +
+  labs(title = "Mean Seed Count per Treatment with Confidence Intervals",
+       x = "Treatment",
+       y = "Mean Seed Count") +
+  theme_minimal()
+```
+
+### Explanation:
+
+-   **Bar Chart**: The bar chart displays the mean seed count for each treatment with error bars representing the 95% confidence interval.
+
+### Scatterplot of Seed Count vs Fruit Diameter
+
+```{r}
+#| label: Seed Count vs Fruit Diameter
+# Scatterplot
+ggplot(data, aes(x = FrDiam, y = Nseeds)) +
+  geom_point(color = "blue", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
+  labs(title = "Scatterplot of Seed Count vs Fruit Diameter",
+       x = "Fruit Diameter",
+       y = "Seed Count") +
+  theme_minimal()
+```
+
+### Explanation:
+
+-   **Scatterplot**: This scatterplot shows the relationship between `FrDiam` and `Nseeds`, with a red linear regression line.
+
+### Violin Plot of Seed Counts by Treatment
+
+```{r}
+{r}
+#| label: Seed Count Violin
+# Violin Plot
+ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.color = "red") +
+  labs(title = "Violin Plot of Seed Counts by Treatment",
+       x = "Treatment",
+       y = "Seed Count") +
+  theme_minimal()
+```
+
+### Explanation:
+
+-   **Violin Plot**: The violin plot visualizes the distribution of `Nseeds` for each treatment, showing the kernel density estimate along with a box plot inside the violin to represent summary statistics.
+
+## **Recommendation for Visualizations:**
+
+-   For understanding the overall distribution of data, **density plots** are effective as they highlight the shape of the distribution better.
+-   For comparing treatments, **box plots** and **violin plots** clearly show variations and central tendencies.
+-   **Bar charts with error bars** are ideal for summarizing mean values with their associated uncertainties.
