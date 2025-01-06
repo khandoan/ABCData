@@ -1,5 +1,5 @@
 ---
-title: "Reevaluating Data on Insect Repellent and Chemical Treatments to Reduce Seed Number in ‘Afourer’ Mandarin"
+title: "Analysis of seed and fruit data"
 author: "Arfa Ghias, Ana Belem, Cann Doan, Fatima Tahir"
 format: html
 editor: visual
@@ -21,9 +21,46 @@ library(agricolae)
 knitr::opts_chunk$set(fig.path = 'results/')
 ```
 
+## Introduction
+
+Obtaining citrus fruits without seeds is a recurrent objective for farmers as it is one of the most valued characteristics, especially in mandarins. Several agronomic techniques have been suggested to control presence of seeds, such as covering with nets and copper sulfate (CuSO4) and gibberellic acid (GA3) treatments. Natural bee repellents are also proposed to reduce the number of seeds per fruit. This study aimed to **compare the effect of several agronomic treatments to reduce the seed number** in 'Afourer' mandarin. 
+
+The data is based on the research presented in **Scientia Horticulturae** (Volume 246, 27 February 2019, Pages 437-447), titled **“*Insect repellent and chemical agronomic treatments to reduce seed number in ‘Afourer’ mandarin: Effect on yield and fruit diameter”****.* The dataset includes measurements related to:
+
+1.  Application of insect repellents and chemical treatments.
+2.  Seed numbers in ‘Afourer’ mandarin.
+3.  Yield and fruit diameter metrics.
+
+**Objective of Article:** 
+
+Focuses on studying methods to manage seed production in Afourer mandarins, a variety known for its desirable seedless characteristics, but it can develop seeds under certain conditions due to cross-pollination.
+
+**Objective of Our Project:**
+
+A. Replicate statistical analyses from the research article using available data to exercise R skills learned in class. 
+
+B. Verify results presented in the article for seed-related data to confirm accuracy, consistency, and explore potential alternatives in processing and presenting data. 
+
+C. To extract data independently from an open resource as opposed to a pre-defined datasets. 
+
+## Methods
+
+The data used in this project originates from the research article "Insect repellent and chemical agronomic treatments to reduce seed number in ‘Afourer’ mandarin: Effect on yield and fruit diameter" published in Scientia Horticulturae (2019). The original data was collected from experiments investigating the effects of different insect repellents and chemical agronomic treatments on seed production, yield, and fruit diameter in ‘Afourer’ mandarin.
+
+Data Structure:
+
+The data includes several variables, such as:
+
+1.  Seed count per fruit under various treatments.
+2.  Yield and fruit diameter measurements.
+3.  The application of insect repellents and chemical treatments.
+4.  Data from different experimental blocks and treatment groups.
+
+The dataset is organized in Excel format, containing raw data and variables related to each of the above parameters.Our main focus was on number of seeds or seed count per fruit under various treatments.
+
 ## A. Descriptive Statistics
 
-```{r}
+```{r setup, include=FALSE}
 # Load necessary libraries
 library(ggplot2)
 knitr::opts_chunk$set(fig.path = 'results/')
@@ -625,6 +662,7 @@ ggplot(data, aes(x = FrDiam, y = Nseeds)) +
 ### Violin Plot of Seed Counts by Treatment
 
 ```{r}
+{r}
 #| label: Seed Count Violin
 # Violin Plot
 ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
