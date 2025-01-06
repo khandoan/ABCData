@@ -126,8 +126,6 @@ print(agricolae_result$groups)
 
     -   This confirms that **no intervention (B)** results in **no seed production**, as expected.
 
-<!-- -->
-
 -   **Positive Control (A):**
 
     -   The mean for A is **0.986** and belongs to group **"ab"**, indicating it performs **significantly better than the negative control (B)**.
