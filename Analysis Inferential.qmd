@@ -63,6 +63,31 @@ Given the past results we can tell the following things regarding:
 
 -   Since the treatment effect is significant, we performed a **post-hoc test** ( Tukey's test) to find out **which treatment groups differ** from each other.
 
+### General effect of blocks on number of seeds
+
+```{r}
+ggplot(data_clean, aes(x = Block, y = Nseeds, fill = Block)) +
+  geom_boxplot(alpha = 0.7) +
+  theme_minimal() +
+  labs(title = "Effect of Blocks on Number of Seeds",
+       x = "Block",
+       y = "Number of Seeds") +
+  scale_fill_brewer(palette = "Set3")
+```
+
+### Interaction between blocks and treatments
+
+```{r}
+interaction.plot(x.factor = data_clean$Treatment, 
+                 trace.factor = data_clean$Block, 
+                 response = data_clean$Nseeds, 
+                 col = rainbow(length(unique(data_clean$Block))), 
+                 legend = TRUE,
+                 xlab = "Treatment", 
+                 ylab = "Mean Number of Seeds",
+                 main = "Interaction Between Treatment and Block")
+```
+
 ## Tukey test
 
 The **Tukey's post-hoc test** results helps to identify which **pairs of groups** (treatments and blocks) are significantly different after running the ANOVA.
