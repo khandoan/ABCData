@@ -23,7 +23,7 @@ knitr::opts_chunk$set(fig.path = 'results/')
 
 ## A. Descriptive Statistics
 
-```{r setup, include=FALSE}
+```{r}
 # Load necessary libraries
 library(ggplot2)
 knitr::opts_chunk$set(fig.path = 'results/')
@@ -180,7 +180,7 @@ cat("\nChi-squared Statistic (X^2):", chi_squared_result$statistic, "\n")
 cat("P-value:", chi_squared_result$p.value, "\n")
 ```
 
-## **Explanation:** 
+## **Explanation:**
 
 The contingency table summarizes the counts of seeded and seedless fruits across five treatments (A, B, C, D, E):
 
@@ -625,7 +625,6 @@ ggplot(data, aes(x = FrDiam, y = Nseeds)) +
 ### Violin Plot of Seed Counts by Treatment
 
 ```{r}
-{r}
 #| label: Seed Count Violin
 # Violin Plot
 ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
