@@ -1,5 +1,5 @@
 ---
-title: "Analysis of seed and fruit data"
+title: "Reevaluating Data on Insect Repellent and Chemical Treatments to Reduce Seed Number in ‘Afourer’ Mandarin"
 author: "Arfa Ghias, Ana Belem, Cann Doan, Fatima Tahir"
 format: html
 editor: visual
