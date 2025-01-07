@@ -60,7 +60,7 @@ The dataset is organized in Excel format, containing raw data and variables rela
 
 ## A. Descriptive Statistics
 
-```{r setup, include=FALSE}
+```{r}
 # Load necessary libraries
 library(ggplot2)
 knitr::opts_chunk$set(fig.path = 'results/')
@@ -632,7 +632,6 @@ ggplot(data, aes(x = FrDiam, y = Nseeds)) +
 ### Violin Plot of Seed Counts by Treatment
 
 ```{r}
-{r}
 #| label: Seed Count Violin
 # Violin Plot
 ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
@@ -653,3 +652,9 @@ ggplot(data, aes(x = Treatment, y = Nseeds, fill = Treatment)) +
 -   For understanding the overall distribution of data, **density plots** are effective as they highlight the shape of the distribution better.
 -   For comparing treatments, **box plots** and **violin plots** clearly show variations and central tendencies.
 -   **Bar charts with error bars** are ideal for summarizing mean values with their associated uncertainties.
+
+**Conclusion**
+
+This study assessed the effectiveness of various agronomic treatments in reducing seed numbers in 'Afourer' mandarins, a trait highly valued by consumers and producers. Through comprehensive statistical analyses, the results highlighted that treatment B (CuGA) was the most effective in achieving seedlessness, followed by treatment C, while other treatments demonstrated moderate effects. Significant differences between treatments and blocks were identified, emphasizing the influence of both factors on seed count.
+
+The findings support the potential of specific agronomic practices to manage seed production effectively, thereby enhancing fruit quality without compromising yield.

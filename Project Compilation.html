@@ -103,6 +103,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Obtaining citrus fruits without seeds is a recurrent objective for farmers as it is one of the most valued characteristics, especially in mandarins. Several agronomic techniques have been suggested to control presence of seeds, such as covering with nets and copper sulfate (CuSO4) and gibberellic acid (GA3) treatments. Natural bee repellents are also proposed to reduce the number of seeds per fruit. This study aimed to <strong>compare the effect of several agronomic treatments to reduce the seed number</strong> in ‘Afourer’ mandarin.&nbsp;</p>
+<p>The data is based on the research presented in <strong>Scientia Horticulturae</strong> (Volume 246, 27 February 2019, Pages 437-447), titled <strong>“<em>Insect repellent and chemical agronomic treatments to reduce seed number in ‘Afourer’ mandarin: Effect on yield and fruit diameter”</em></strong><em>.</em> The dataset includes measurements related to:</p>
+<ol type="1">
+<li>Application of insect repellents and chemical treatments.</li>
+<li>Seed numbers in ‘Afourer’ mandarin.</li>
+<li>Yield and fruit diameter metrics.</li>
+</ol>
+<p><strong>Objective of Article:</strong>&nbsp;</p>
+<p>Focuses on studying methods to manage seed production in Afourer mandarins, a variety known for its desirable seedless characteristics, but it can develop seeds under certain conditions due to cross-pollination.</p>
+<p><strong>Objective of Our Project:</strong></p>
+<p>A. Replicate statistical analyses from the research article using available data to exercise R skills learned in class.&nbsp;</p>
+<p>B. Verify results presented in the article for seed-related data to confirm accuracy, consistency, and explore potential alternatives in processing and presenting data.&nbsp;</p>
+<p>C. To extract data independently from an open resource as opposed to a pre-defined datasets.&nbsp;</p>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>The data used in this project originates from the research article “Insect repellent and chemical agronomic treatments to reduce seed number in ‘Afourer’ mandarin: Effect on yield and fruit diameter” published in Scientia Horticulturae (2019). The original data was collected from experiments investigating the effects of different insect repellents and chemical agronomic treatments on seed production, yield, and fruit diameter in ‘Afourer’ mandarin.</p>
+<p>Data Structure:</p>
+<p>The data includes several variables, such as:</p>
+<ol type="1">
+<li>Seed count per fruit under various treatments.</li>
+<li>Yield and fruit diameter measurements.</li>
+<li>The application of insect repellents and chemical treatments.</li>
+<li>Data from different experimental blocks and treatment groups.</li>
+</ol>
+<p>The dataset is organized in Excel format, containing raw data and variables related to each of the above parameters.Our main focus was on number of seeds or seed count per fruit under various treatments. We performed the following analyses for our project:</p>
+</section>
 <section id="a.-descriptive-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="a.-descriptive-statistics">A. Descriptive Statistics</h2>
 <div class="cell">
@@ -386,12 +415,7 @@ Chi-squared Statistic (X^2): 106.0561 </code></pre>
 </section>
 <section id="explanation-6" class="level2">
 <h2 class="anchored" data-anchor-id="explanation-6"><strong>Explanation:</strong></h2>
-<p>The contingency table summarizes the counts of seeded and seedless fruits across five treatments (A, B, C, D, E):</p>
-<p>Treatment B: Produces only seedless fruits (100% seedless, 0% seeded). This suggests that Treatment B is the most effective at preventing seed formation. Treatment C: A majority of the fruits are seedless (74.07%), though a small proportion (25.93%) still have seeds. Treatments A, D, and E: These treatments show a more balanced split between seeded and seedless fruits, with seedless fruits accounting for around 51–52% of the total.</p>
-<p>The percentage table provides the proportion of seeded and seedless fruits within each treatment:</p>
-<p>Treatment B stands out with 100% seedless fruits, clearly demonstrating its superior effectiveness. Treatments A, D, and E have a nearly even split between seeded and seedless fruits, indicating lower effectiveness in producing seedless fruits compared to B and C.</p>
-<p>The chi-squared test statistic is 106.0561, indicating a large deviation between the observed and expected frequencies under the null hypothesis. A high chi-square value suggests that the distribution of seeded and seedless fruits varies significantly across treatments. The p-value is 5.04 × 10⁻²², which is extremely small (essentially zero). A p-value this small strongly rejects the null hypothesis. This indicates that the differences in the proportions of seeded and seedless fruits across treatments are statistically significant.</p>
-<p>Treatment B is the most effective at producing seedless fruits, followed by Treatment C. Treatments A, D, and E are less effective, with more balanced proportions of seeded and seedless fruits. The chi-square test confirms that the observed differences in seed presence across treatments are not due to random chance. Treatment B is likely the best candidate for applications where seedlessness is a priority. Treatments C, D, and E might still be useful, but with less consistent results.</p>
+<p>Treatment B is the most effective, producing 100% seedless fruits, followed by Treatment C (74.07% seedless). Treatments A, D, and E show balanced proportions (~51–52% seedless). The chi-squared test (χ² = 106.0561, p &lt; 0.0001) confirms significant differences, with Treatment B being the best choice for prioritizing seedlessness.</p>
 </section>
 <section id="percentage-of-seed-presence-by-treatment" class="level2">
 <h2 class="anchored" data-anchor-id="percentage-of-seed-presence-by-treatment">8. Percentage of Seed Presence by Treatment</h2>
@@ -523,17 +547,7 @@ Chi-squared Statistic (X^2): 106.0561 </code></pre>
 </section>
 <section id="explanation-7" class="level2">
 <h2 class="anchored" data-anchor-id="explanation-7">Explanation</h2>
-<p>This stacked bar chart illustrates the Percentage of Seed Presence by Treatment, comparing the proportion of seeded (TRUE) and seedless (FALSE) fruits across five treatments.</p>
-<p>Treatment B (C-, Negative Control): 100% seedless fruits were observed, as expected for the negative control.</p>
-<p>Treatment CuGA: 25.9% of fruits are seeded, while 74.1% are seedless. This treatment demonstrates strong suppression of seed development but is less effective than the control in achieving full seedlessness.</p>
-<p>Treatment ZnRep: A near-even split, with 47.6% seeded and 52.4% seedless fruits. This treatment shows moderate effectiveness, with seed suppression comparable to a coin toss.</p>
-<p>Treatment CapRep: Similarly, 48.6% seeded and 51.4% seedless. The results are almost identical to ZnRep, suggesting these two treatments have similar impacts on seed suppression.</p>
-<p>Treatment C+: 49.0% seeded and 51.0% seedless. This treatment is also comparable to ZnRep and CapRep in its ability to produce seedless fruits.</p>
-<p>Effectiveness of Treatments: CuGA stands out as the most effective active treatment, with the highest proportion of seedless fruits (74.1%). ZnRep, CapRep, and C+ perform similarly, with roughly equal proportions of seeded and seedless fruits, indicating lower effectiveness compared to CuGA.</p>
-</section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>This analysis examined seed count, fruit diameter, and treatment effects on fruit development. The Chi-squared test evaluated the relationship between treatments and seed presence, and visualizations provided deeper insights into distributions.</p>
+<p>The chart shows seed presence across treatments: <strong>B</strong> (100% seedless) is most effective, followed by <strong>CuGA</strong> (74.1% seedless). <strong>ZnRep</strong>, <strong>CapRep</strong>, and <strong>C+</strong> show similar moderate effectiveness (~51% seedless). CuGA stands out as the best active treatment.</p>
 </section>
 <section id="d.-inferential-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="d.-inferential-statistics"><strong>D. Inferential statistics</strong></h2>
@@ -573,16 +587,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </ul></li>
 <li><p><strong>Residuals</strong>:</p>
 <ul>
-<li>Residuals represent the <strong>unexplained variability</strong> after accounting for treatments and blocks.</li>
+<li><p>Residuals represent the <strong>unexplained variability</strong> after accounting for treatments and blocks.</p>
+<p>Both the <strong>treatment</strong> and the <strong>block</strong> factors influence the response variable (<strong>Nseeds</strong>). Since the treatment effect is significant, we performed a <strong>post-hoc test</strong> ( Tukey’s test) to find out <strong>which treatment groups differ</strong> from each other.</p></li>
 </ul></li>
 </ol>
-<section id="conclusion-1" class="level4">
-<h4 class="anchored" data-anchor-id="conclusion-1"><strong>Conclusion</strong>:</h4>
-<ul>
-<li><p>Both the <strong>treatment</strong> and the <strong>block</strong> factors influence the response variable (<strong>Nseeds</strong>).</p></li>
-<li><p>Since the treatment effect is significant, we performed a <strong>post-hoc test</strong> ( Tukey’s test) to find out <strong>which treatment groups differ</strong> from each other.</p></li>
-</ul>
-</section>
 <section id="general-effect-of-blocks-on-number-of-seeds" class="level3">
 <h3 class="anchored" data-anchor-id="general-effect-of-blocks-on-number-of-seeds">General effect of blocks on number of seeds</h3>
 <div class="cell">
@@ -1002,6 +1010,9 @@ B 0.0000000      c</code></pre>
 <li>For comparing treatments, <strong>box plots</strong> and <strong>violin plots</strong> clearly show variations and central tendencies.</li>
 <li><strong>Bar charts with error bars</strong> are ideal for summarizing mean values with their associated uncertainties.</li>
 </ul>
+<p><strong>Conclusion</strong></p>
+<p>This study assessed the effectiveness of various agronomic treatments in reducing seed numbers in ‘Afourer’ mandarins, a trait highly valued by consumers and producers. Through comprehensive statistical analyses, the results highlighted that treatment B (CuGA) was the most effective in achieving seedlessness, followed by treatment C, while other treatments demonstrated moderate effects. Significant differences between treatments and blocks were identified, emphasizing the influence of both factors on seed count.</p>
+<p>The findings support the potential of specific agronomic practices to manage seed production effectively, thereby enhancing fruit quality without compromising yield.</p>
 </section>
 
 </main>
