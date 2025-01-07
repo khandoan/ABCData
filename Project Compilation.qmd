@@ -56,7 +56,7 @@ The data includes several variables, such as:
 3.  The application of insect repellents and chemical treatments.
 4.  Data from different experimental blocks and treatment groups.
 
-The dataset is organized in Excel format, containing raw data and variables related to each of the above parameters.Our main focus was on number of seeds or seed count per fruit under various treatments.
+The dataset is organized in Excel format, containing raw data and variables related to each of the above parameters.Our main focus was on number of seeds or seed count per fruit under various treatments. We performed the following analyses for our project:
 
 ## A. Descriptive Statistics
 
@@ -219,17 +219,7 @@ cat("P-value:", chi_squared_result$p.value, "\n")
 
 ## **Explanation:**
 
-The contingency table summarizes the counts of seeded and seedless fruits across five treatments (A, B, C, D, E):
-
-Treatment B: Produces only seedless fruits (100% seedless, 0% seeded). This suggests that Treatment B is the most effective at preventing seed formation. Treatment C: A majority of the fruits are seedless (74.07%), though a small proportion (25.93%) still have seeds. Treatments A, D, and E: These treatments show a more balanced split between seeded and seedless fruits, with seedless fruits accounting for around 51–52% of the total.
-
-The percentage table provides the proportion of seeded and seedless fruits within each treatment:
-
-Treatment B stands out with 100% seedless fruits, clearly demonstrating its superior effectiveness. Treatments A, D, and E have a nearly even split between seeded and seedless fruits, indicating lower effectiveness in producing seedless fruits compared to B and C.
-
-The chi-squared test statistic is 106.0561, indicating a large deviation between the observed and expected frequencies under the null hypothesis. A high chi-square value suggests that the distribution of seeded and seedless fruits varies significantly across treatments. The p-value is 5.04 × 10⁻²², which is extremely small (essentially zero). A p-value this small strongly rejects the null hypothesis. This indicates that the differences in the proportions of seeded and seedless fruits across treatments are statistically significant.
-
-Treatment B is the most effective at producing seedless fruits, followed by Treatment C. Treatments A, D, and E are less effective, with more balanced proportions of seeded and seedless fruits. The chi-square test confirms that the observed differences in seed presence across treatments are not due to random chance. Treatment B is likely the best candidate for applications where seedlessness is a priority. Treatments C, D, and E might still be useful, but with less consistent results.
+Treatment B is the most effective, producing 100% seedless fruits, followed by Treatment C (74.07% seedless). Treatments A, D, and E show balanced proportions (\~51–52% seedless). The chi-squared test (χ² = 106.0561, p \< 0.0001) confirms significant differences, with Treatment B being the best choice for prioritizing seedlessness.
 
 ## 8. Percentage of Seed Presence by Treatment
 
@@ -308,23 +298,7 @@ ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
 
 ## Explanation
 
-This stacked bar chart illustrates the Percentage of Seed Presence by Treatment, comparing the proportion of seeded (TRUE) and seedless (FALSE) fruits across five treatments.
-
-Treatment B (C-, Negative Control): 100% seedless fruits were observed, as expected for the negative control.
-
-Treatment CuGA: 25.9% of fruits are seeded, while 74.1% are seedless. This treatment demonstrates strong suppression of seed development but is less effective than the control in achieving full seedlessness.
-
-Treatment ZnRep: A near-even split, with 47.6% seeded and 52.4% seedless fruits. This treatment shows moderate effectiveness, with seed suppression comparable to a coin toss.
-
-Treatment CapRep: Similarly, 48.6% seeded and 51.4% seedless. The results are almost identical to ZnRep, suggesting these two treatments have similar impacts on seed suppression.
-
-Treatment C+: 49.0% seeded and 51.0% seedless. This treatment is also comparable to ZnRep and CapRep in its ability to produce seedless fruits.
-
-Effectiveness of Treatments: CuGA stands out as the most effective active treatment, with the highest proportion of seedless fruits (74.1%). ZnRep, CapRep, and C+ perform similarly, with roughly equal proportions of seeded and seedless fruits, indicating lower effectiveness compared to CuGA.
-
-## Conclusion
-
-This analysis examined seed count, fruit diameter, and treatment effects on fruit development. The Chi-squared test evaluated the relationship between treatments and seed presence, and visualizations provided deeper insights into distributions.
+The chart shows seed presence across treatments: **B** (100% seedless) is most effective, followed by **CuGA** (74.1% seedless). **ZnRep**, **CapRep**, and **C+** show similar moderate effectiveness (\~51% seedless). CuGA stands out as the best active treatment.
 
 ## **D. Inferential statistics**
 
@@ -363,11 +337,7 @@ Given the past results we can tell the following things regarding:
 
     -   Residuals represent the **unexplained variability** after accounting for treatments and blocks.
 
-#### **Conclusion**:
-
--   Both the **treatment** and the **block** factors influence the response variable (**Nseeds**).
-
--   Since the treatment effect is significant, we performed a **post-hoc test** ( Tukey's test) to find out **which treatment groups differ** from each other.
+        Both the **treatment** and the **block** factors influence the response variable (**Nseeds**). Since the treatment effect is significant, we performed a **post-hoc test** ( Tukey's test) to find out **which treatment groups differ** from each other.
 
 ### General effect of blocks on number of seeds
 
