@@ -81,7 +81,7 @@ contingency_table <- table(data_clean$Treatment, data_clean$SeedStatus)
 print(contingency_table)
 
 # Perform Fisher's Exact Test
-fisher_result <- fisher.test(contingency_table, workspace = 2e7) # Increase workspace
+fisher_result <- fisher.test(contingency_table, workspace = 2e9) # Increase workspace
 print(fisher_result)
 
 # Reorder treatments for plotting
@@ -125,15 +125,15 @@ annotations <- data.frame(
     pull(Proportion),
   Label = sprintf("p = %.3f %s", pairwise_results$p_value, pairwise_results$significance)  # Combining p-value and significance symbol
 )
-
+annotations
 # Create a clustered bar plot with both p-values and significance symbols
 # Create a clustered bar plot with both p-values and significance symbols
 ggplot(proportion_data, aes(x = Treatment, y = Proportion, fill = SeedStatus)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8), alpha = 0.8) +
   # Add text labels for p-values and significance symbols only for Seedless category
   geom_text(data = annotations, aes(x = Treatment, y = Seedless_Proportion, label = Label), 
-            inherit.aes = FALSE, position = position_dodge(width = 0.8), 
-            vjust = -0.5, size = 3.5, color = "black") +  # Adjust vjust to move text upwards
+            inherit.aes = FALSE, position = position_dodge(width = 0.2), 
+            vjust = -0.5, size = 3.5, color = "white") +  # Adjust vjust to move text upwards
   scale_fill_brewer(palette = "Set2", name = "Seed Status") +
   theme_minimal() +
   labs(
@@ -143,7 +143,7 @@ ggplot(proportion_data, aes(x = Treatment, y = Proportion, fill = SeedStatus)) +
   ) +
   theme(
     plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.x = element_text(angle = 0, hjust = 1),
     axis.text = element_text(size = 10),  # Adjust axis text size for better readability
     axis.title = element_text(size = 12)  # Adjust axis title size for better readability
   )
