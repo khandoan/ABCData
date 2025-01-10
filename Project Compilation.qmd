@@ -536,7 +536,7 @@ According to the given graph:
 
 Thus, we should prioritize treatments that either have **no seeds (B)** or minimize seed count, such as **CuGA (C)**, to achieve fruits with the fewest seeds.
 
-## E. 
+## E. Improved analysis
 
 ## Analysis with less than two seeds fruits
 
