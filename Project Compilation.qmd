@@ -3,6 +3,7 @@ title: "Reevaluating Data on Insect Repellent and Chemical Treatments to Reduce 
 author: "Arfa Ghias, Ana Belem, Cann Doan, Fatima Tahir"
 format: html
 editor: visual
+date: last-modified
 ---
 
 ```{r setup, include=FALSE}
