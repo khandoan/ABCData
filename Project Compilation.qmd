@@ -536,7 +536,157 @@ According to the given graph:
 
 Thus, we should prioritize treatments that either have **no seeds (B)** or minimize seed count, such as **CuGA (C)**, to achieve fruits with the fewest seeds.
 
-## E. Visualization Techniques
+## E. 
+
+## Analysis with less than two seeds fruits
+
+In the fruit industry, seedless fruits or fruits with very few seeds are highly sought after for their consumer appeal, as they offer greater convenience and are often preferred in various culinary applications. While the ideal is to produce entirely seedless fruits, those with a minimal seed count are still considered desirable. Therefore, we decided to reanalyze our data with a new focus: treating fruits with **2 or fewer seeds** as **seedless**. This approach allows for a more refined understanding of the treatments that effectively minimize seed production, which is crucial for enhancing the marketability of fruit products.
+
+```{r}
+{r}
+# Load data
+#| label: TwoSeedsPercen
+data <- read.csv("DATA/frutasysemillas.csv")
+data <- na.omit(data)
+data <- data %>%
+  mutate(SeedPresence = ifelse(Nseeds > 2, "TRUE", "FALSE"))  # Categorize as Seeded or Seedless
+
+# Step 3: Check and force Treatment levels
+data$Treatment <- factor(data$Treatment, 
+                         levels = c("B", "C", "D", "E", "A"))  # Order: C-, CuGA, ZnRep, CapRep, C+
+
+# Debugging Step: Print treatment levels
+#print("Treatment levels after ordering:")
+#print(levels(data$Treatment))
+
+# Step 4: Calculate Percentages by Treatment and SeedPresence
+percent_data <- data %>%
+  group_by(Treatment, SeedPresence) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  group_by(Treatment) %>%
+  mutate(Percent = (Count / sum(Count)) * 100)
+
+# Debugging Step: Print percent_data
+#print("Summarized percentage data:")
+#print(percent_data)
+
+# Step 5: Force the graph to output
+ggplot(percent_data, aes(x = Treatment, y = Percent, fill = SeedPresence)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = sprintf("%.1f%%", Percent)),
+            position = position_stack(vjust = 0.5), color = "white", size = 4) +
+  labs(title = "Percentage of Seed Presence by Treatment",
+       x = "Treatment",
+       y = "Percentage",
+       fill = "Seed Presence") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("C-", "CuGA", "ZnRep", "CapRep", "C+"))  # Correct display labels
+
+
+```
+
+### Fisher's Test 
+
+A **Fisher's Exact Test** is particularly useful when analyzing categorical data in small or unbalanced datasets. In this case, tests if the proportion of seedless fruits is significantly different across treatments.
+
+```{r}
+# Read and clean the data
+data <- read.csv("DATA/frutasysemillas.csv", stringsAsFactors = TRUE)
+data_clean <- na.omit(data[, c("Treatment", "Tree", "Nseeds")])
+
+# Classify fruits as seedless or seeded
+data_clean <- data_clean %>%
+  mutate(SeedStatus = ifelse(Nseeds <= 2, "Seedless", "Seeded"))
+
+# Create a contingency table for Treatment and SeedStatus
+contingency_table <- table(data_clean$Treatment, data_clean$SeedStatus)
+print(contingency_table)
+
+# Perform Fisher's Exact Test
+fisher_result <- fisher.test(contingency_table, workspace = 2e9) # Increase workspace
+print(fisher_result)
+
+# Reorder treatments for plotting
+data_clean$Treatment <- factor(data_clean$Treatment, levels = c("B", "C", "D", "E", "A"))
+
+# Calculate proportions of Seedless and Seeded fruits for each Treatment
+proportion_data <- data_clean %>%
+  group_by(Treatment, SeedStatus) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  mutate(Proportion = Count / sum(Count))
+
+# Perform pairwise Fisher's tests manually
+pairwise_results <- combn(levels(data_clean$Treatment), 2, function(pair) {
+  sub_table <- contingency_table[pair, ]
+  fisher_res <- fisher.test(sub_table)
+  data.frame(
+    Group1 = pair[1],
+    Group2 = pair[2],
+    p_value = fisher_res$p.value
+  )
+}, simplify = FALSE) %>%
+  bind_rows()
+
+# Adjust p-values for multiple comparisons
+pairwise_results <- pairwise_results %>%
+  mutate(adjusted_p_value = p.adjust(p_value, method = "bonferroni"),
+         significance = case_when(
+           adjusted_p_value > 0.05 ~ "ns",
+           adjusted_p_value <= 0.001 ~ "***",
+           adjusted_p_value <= 0.01 ~ "**",
+           adjusted_p_value <= 0.05 ~ "*"
+         ))
+
+print(pairwise_results)
+
+# Add annotations for the plot using both the p-value and corresponding symbol
+annotations <- data.frame(
+  Treatment = levels(data_clean$Treatment),
+  Seedless_Proportion = proportion_data %>%
+    filter(SeedStatus == "Seedless") %>%
+    pull(Proportion),
+  Label = sprintf("p = %.3f %s", pairwise_results$p_value, pairwise_results$significance)  # Combining p-value and significance symbol
+)
+annotations
+# Create a clustered bar plot with both p-values and significance symbols
+# Create a clustered bar plot with both p-values and significance symbols
+ggplot(proportion_data, aes(x = Treatment, y = Proportion, fill = SeedStatus)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), alpha = 0.8) +
+  # Add text labels for p-values and significance symbols only for Seedless category
+  geom_text(data = annotations, aes(x = Treatment, y = Seedless_Proportion, label = Label), 
+            inherit.aes = FALSE, position = position_dodge(width = 0.2), 
+            vjust = -0.5, size = 3.5, color = "white") +  # Adjust vjust to move text upwards
+  scale_fill_brewer(palette = "Set2", name = "Seed Status") +
+  theme_minimal() +
+  labs(
+    title = "Proportion of Seedless and Seeded Fruits by Treatment",
+    x = "Treatment",
+    y = "Proportion"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(angle = 0, hjust = 1),
+    axis.text = element_text(size = 10),  # Adjust axis text size for better readability
+    axis.title = element_text(size = 12)  # Adjust axis title size for better readability
+  )
+
+```
+
+The analysis shows the proportion of seedless fruits for each treatment and their statistical significance based on Fisher's exact test:
+
+1.  **Seedless Proportions**:
+
+    -   **C (CuGA)**: 23.0% (highest seedless proportion, highly significant).
+
+    -   **D (ZnRep)**: 18.0% (highly significant).
+
+    -   **A (positive control)**: 16.7% (moderately significant).
+
+    -   **E (CapRep)**: 15.8% (highly significant).
+
+    -   **B (negative control)**: 15.4% (weakly significant).
+
+## F. Visualization Techniques
 
 In this section, we visualize the seed counts by treatment using various types of plots.
 
